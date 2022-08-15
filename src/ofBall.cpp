@@ -5,8 +5,7 @@
 //  Created by Tillman on 12.08.22.
 //
 
-#include "ofTall.hpp"
-#include "ofApp.h"
+#include "ofBall.hpp"
 
 ofBall::ofBall() {
 

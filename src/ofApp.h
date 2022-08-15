@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofTombola.hpp"
+#include "ofBall.hpp"
 
 class ofApp : public ofBaseApp{
 
@@ -20,5 +22,12 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+    ofTombola tombola{};
+    vector<ofPoint>drawnPoints;
+    vector<ofTombola>tombolaLines;
+    
+    ofBall ball{};
+  
 		
 };

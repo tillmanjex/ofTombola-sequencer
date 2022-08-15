@@ -6,16 +6,19 @@
 //
 
 #include "ofTombola.hpp"
-#include "ofApp.h"
 
 ofTombola::ofTombola() {
     
-    length = 5;
-    width = 1;
     radius = 10;
     rotation = 0;
     spinSpeed = 0;
     color.set(255);
+    v0.set(100, 150, 0);
+    v1.set(200, 200, 0);
+}
+
+ofTombola::~ofTombola(){
+    
 }
 
 void ofTombola::update() {
@@ -24,7 +27,9 @@ void ofTombola::update() {
 
 
 void ofTombola::draw() {
-    pt.set(100, 200);
-    tombolaLine.addVertex(pt);
+    tombolaLine.lineTo(v0);
+    tombolaLine.lineTo(v1);
     tombolaLine.draw();
+
+
 }

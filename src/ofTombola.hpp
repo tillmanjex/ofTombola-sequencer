@@ -5,33 +5,34 @@
 //  Created by Tillman on 12.08.22.
 //
 
-#ifndef tombola_hpp
-#define tombola_hpp
+#ifndef ofTombola_hpp
+#define ofTombola_hpp
 
 #include <stdio.h>
 #include "ofMain.h"
 
-#endif /* tombola_hpp */
+#endif /* ofTombola_hpp */
 
-class Tombola {
+class ofTombola {
     
 public:
-    Tombola();
-    ~Tombola();
+    ofTombola();
+    ~ofTombola();
     
     void update();
     void draw();
     
-    ofPolyline tombolaLine;
+    ofPoint pointA;
+    ofPoint pointB;
   
 private:
     ofColor color{};
-    int length{};
-    int width{};
     float rotation{};
     float spinSpeed{};
     float radius{};
-    ofPoint pt;
+    ofPolyline tombolaLine;
+    ofVec3f v0, v1;
+    
 
     
 };
