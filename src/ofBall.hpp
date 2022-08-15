@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "ofMain.h"
 
+
 #endif /* ofBall_hpp */
 
 class ofBall {
@@ -29,19 +30,22 @@ public:
     
     
 private:
-    int ballSize{};
+    ofVec2f canvasCenter;
+    int radius{};
     int bouncieness{};
     
     int noteValue{};
     ofColor color{};
     
-    //dynamics
+    // Forces
     int mass{}; // useful for changing mass before ball generation to make more varied collission rhythms
-    float xSpeed{};
-    float ySpeed{};
-    float acceleration{};
     float gravity{};
+    ofVec2f location;
+    ofVec2f speed;
+    ofVec2f acceleration;
+    ofVec2f velocity;
     
     
 
+    
 };

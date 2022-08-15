@@ -24,6 +24,8 @@ public:
     
     ofPoint pointA;
     ofPoint pointB;
+    
+
   
 private:
     ofColor color{};
@@ -35,8 +37,7 @@ private:
     ofVec3f v0mod, m1mod, v2mod, v3mod;
     
     // tomobola measurement utility
-    int centerX;
-    int centerY;
+    ofVec2f canvasCenter;
 
 
     

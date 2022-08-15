@@ -12,7 +12,9 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
     tombola.draw();
+    ball.draw();
 
 }
 
@@ -38,7 +40,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
@@ -58,8 +60,7 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-    canvasCenter.set(w, h);
-    ofLog() << "canvas center: " << canvasCenter;
+   
 }
 
 //--------------------------------------------------------------

@@ -7,13 +7,16 @@
 
 #include "ofBall.hpp"
 
+
 ofBall::ofBall() {
 
-    ballSize = 20;
-    xSpeed = 0;
-    ySpeed = 0;
-    color.set(255);
-    mass = 5;
+    int radius {10};
+    canvasCenter.set(ofGetWidth() / 2, ofGetHeight() / 2);
+    
+    // Forces
+    location.set(canvasCenter.x, canvasCenter.y);
+    velocity.set(ofRandom(1.0), 2);
+    
 }
 
 ofBall::~ofBall() {
@@ -21,11 +24,12 @@ ofBall::~ofBall() {
 }
 
 void ofBall::update() {
-    
+    location += velocity;
 }
 
 void ofBall::draw() {
     
+    ofDrawEllipse(location.x, location.y, radius, radius);
 }
 
 void ofBall::setMusicalParams() {

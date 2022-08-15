@@ -24,11 +24,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     ofTombola tombola{};
-    vector<ofPoint>drawnPoints;
-    vector<ofTombola>tombolaLines;
-    
     ofBall ball{};
-    ofVec2f canvasCenter;
+
   
 		
 };
