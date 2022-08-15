@@ -9,12 +9,28 @@
 
 ofTombola::ofTombola() {
     
-    radius = 10;
+    
     rotation = 0;
     spinSpeed = 0;
-    color.set(255);
-    v0.set(100, 150, 0);
-    v1.set(200, 200, 0);
+    color.set(255, 0, 0); // not working yet
+    centerX = ofGetWindowWidth() / 2;
+    centerY = ofGetWindowHeight() / 2;
+    
+    // vertex points for hexagon
+    radius = 200;
+    v0.set(centerX + radius * cos(glm::radians(0.0)), centerY + radius * sin(glm::radians(0.0)), 0);
+    v1.set(centerX + radius * cos(glm::radians(60.0)), centerY + radius * sin(glm::radians(60.0)), 0);
+    v2.set(centerX + radius * cos(glm::radians(60.0)), centerY + radius * sin(glm::radians(60.0)), 0);
+    v3.set(centerX + radius * cos(glm::radians(120.0)), centerY + radius * sin(glm::radians(120.0)), 0);
+    v4.set(centerX + radius * cos(glm::radians(120.0)), centerY + radius * sin(glm::radians(120.0)), 0);
+    v5.set(centerX + radius * cos(glm::radians(180.0)), centerY + radius * sin(glm::radians(180.0)), 0);
+    v6.set(centerX + radius * cos(glm::radians(180.0)), centerY + radius * sin(glm::radians(180.0)), 0);
+    v7.set(centerX + radius * cos(glm::radians(240.0)), centerY + radius * sin(glm::radians(240.0)), 0);
+    v8.set(centerX + radius * cos(glm::radians(240.0)), centerY + radius * sin(glm::radians(240.0)), 0);
+    v9.set(centerX + radius * cos(glm::radians(300.0)), centerY + radius * sin(glm::radians(300.0)), 0);
+    v10.set(centerX + radius * cos(glm::radians(300.0)), centerY + radius * sin(glm::radians(300.0)), 0);
+    v11.set(centerX + radius * cos(glm::radians(360.0)), centerY + radius * sin(glm::radians(360.0)), 0);
+
 }
 
 ofTombola::~ofTombola(){
@@ -23,12 +39,23 @@ ofTombola::~ofTombola(){
 
 void ofTombola::update() {
     
+    
 }
 
 
 void ofTombola::draw() {
     tombolaLine.lineTo(v0);
     tombolaLine.lineTo(v1);
+    tombolaLine.lineTo(v2);
+    tombolaLine.lineTo(v3);
+    tombolaLine.lineTo(v4);
+    tombolaLine.lineTo(v5);
+    tombolaLine.lineTo(v6);
+    tombolaLine.lineTo(v7);
+    tombolaLine.lineTo(v8);
+    tombolaLine.lineTo(v9);
+    tombolaLine.lineTo(v10);
+    tombolaLine.lineTo(v11);
     tombolaLine.draw();
 
 

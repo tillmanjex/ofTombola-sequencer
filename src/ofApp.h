@@ -28,6 +28,7 @@ class ofApp : public ofBaseApp{
     vector<ofTombola>tombolaLines;
     
     ofBall ball{};
+    ofVec2f canvasCenter;
   
 		
 };

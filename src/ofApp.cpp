@@ -7,7 +7,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    tombola.update();
 }
 
 //--------------------------------------------------------------
@@ -58,7 +58,8 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+    canvasCenter.set(w, h);
+    ofLog() << "canvas center: " << canvasCenter;
 }
 
 //--------------------------------------------------------------
