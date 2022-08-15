@@ -10,11 +10,8 @@
 ofTombola::ofTombola() {
     
     
-    rotation = 0;
-    spinSpeed = 0;
-    color.set(255, 0, 0); // not working yet
-    centerX = ofGetWindowWidth() / 2;
-    centerY = ofGetWindowHeight() / 2;
+    centerX{ofGetWindowWidth() / 2};
+    centerY{ofGetWindowHeight() / 2};
     
     // vertex points for hexagon
     radius = 200;

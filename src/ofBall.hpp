@@ -31,10 +31,17 @@ public:
 private:
     int ballSize{};
     int bouncieness{};
-    int mass{}; // useful for changing mass before ball generation to make more varied collission rhythms
+    
     int noteValue{};
+    ofColor color{};
+    
+    //dynamics
+    int mass{}; // useful for changing mass before ball generation to make more varied collission rhythms
     float xSpeed{};
     float ySpeed{};
-    ofColor color{};
+    float acceleration{};
+    float gravity{};
+    
+    
 
 };
