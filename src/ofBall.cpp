@@ -10,12 +10,14 @@
 
 ofBall::ofBall() {
 
-    int radius {10};
+    radius = 10;
+    topspeed = 9.8;
     canvasCenter.set(ofGetWidth() / 2, ofGetHeight() / 2);
     
     // Forces
     location.set(canvasCenter.x, canvasCenter.y);
-    velocity.set(ofRandom(1.0), 2);
+    acceleration.set(00., 0.05);
+    velocity.set(ofRandom(-1.0, 1.0), (-1.0, -2.0));
     
 }
 
@@ -24,12 +26,17 @@ ofBall::~ofBall() {
 }
 
 void ofBall::update() {
+    velocity += acceleration;
+    velocity.limit(topspeed);
     location += velocity;
+    
+    
 }
 
 void ofBall::draw() {
     
     ofDrawEllipse(location.x, location.y, radius, radius);
+
 }
 
 void ofBall::setMusicalParams() {
@@ -37,6 +44,7 @@ void ofBall::setMusicalParams() {
 }
 
 void ofBall::playNote() {
+    // collision with tombola
     
 }
 

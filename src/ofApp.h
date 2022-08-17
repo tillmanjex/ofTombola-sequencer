@@ -23,9 +23,9 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    ofTombola tombola{};
-    ofBall ball{};
-
+    ofTombola tombola;
+    ofBall ball;
+    vector <ofBall> ballsVector;
   
 		
 };

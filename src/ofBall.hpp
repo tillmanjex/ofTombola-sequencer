@@ -28,22 +28,28 @@ public:
     void playNote(); // basically play note on collision - take data from setMusicalParams();
     void musicalScale();
     
-    
-private:
-    ofVec2f canvasCenter;
-    int radius{};
     int bouncieness{};
     
-    int noteValue{};
-    ofColor color{};
-    
     // Forces
-    int mass{}; // useful for changing mass before ball generation to make more varied collission rhythms
-    float gravity{};
     ofVec2f location;
-    ofVec2f speed;
-    ofVec2f acceleration;
     ofVec2f velocity;
+    ofVec2f acceleration;
+    ofVec2f speed;
+    float mass{};
+
+    
+    
+private:
+    
+    ofColor color{};
+    ofVec2f canvasCenter;
+    int radius{};
+    int noteValue{};
+    float topspeed;
+    
+
+    
+    
     
     
 

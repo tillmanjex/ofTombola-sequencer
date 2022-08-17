@@ -7,14 +7,23 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    
+    for (int i = 0; i < ballsVector.size(); i++){
+        ballsVector[i].update();
+        if (ballsVector[i].location.y > ofGetHeight()) {
+            ballsVector.erase(ballsVector.begin()+i);
+            ofLog() << ballsVector[i] << "erased";
+        };
+    };
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+   
     tombola.draw();
-    ball.draw();
+    for (int i = 0; i < ballsVector.size(); i++){
+        ballsVector[i].draw();
+    };
 
 }
 
@@ -40,6 +49,9 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+    
+    ballsVector.push_back(ball);
+    
     
 }
 
