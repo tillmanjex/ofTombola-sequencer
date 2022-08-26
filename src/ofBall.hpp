@@ -29,23 +29,25 @@ public:
     void musicalScale();
     
     int bouncieness{};
+    int radius{10};
+    int noteValue{};
     
     // Forces
     ofVec2f location;
     ofVec2f velocity;
     ofVec2f acceleration;
     ofVec2f speed;
-    float mass{};
+    float mass{10};
+    
+
 
     
     
 private:
     
     ofColor color{};
-    ofVec2f canvasCenter;
-    int radius{};
-    int noteValue{};
-    float topspeed;
+    ofVec2f canvasCenter{};
+    float topspeed{9.8};
     
 
     

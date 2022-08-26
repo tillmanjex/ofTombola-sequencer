@@ -3,6 +3,8 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(0, 0, 0);
+    
+   
 }
 
 //--------------------------------------------------------------
@@ -12,7 +14,7 @@ void ofApp::update(){
         ballsVector[i].update();
         if (ballsVector[i].location.y > ofGetHeight()) {
             ballsVector.erase(ballsVector.begin()+i);
-            ofLog() << ballsVector[i] << "erased";
+            
         };
     };
 }
@@ -29,7 +31,10 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if (key == 'a') {
+        // use it for testin
+        cout << "key pressed: a" << endl;
+    }
 }
 
 //--------------------------------------------------------------
