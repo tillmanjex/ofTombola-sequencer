@@ -29,9 +29,10 @@ class ofApp : public ofBaseApp{
     //vector <ofBall> ballsVector;
   
     ofxBox2d box2d;
+    ofxBox2dEdge testEdge;
     
     // make an array ofxBox2dCircle class pointers 
-    vector <shared_ptr<ofxBox2dCircle> > circles;
+    vector <shared_ptr<ofxBox2dCircle>> circles;
     
     
 };

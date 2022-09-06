@@ -15,11 +15,14 @@ void ofApp::setup(){
 void ofApp::update(){
     
     box2d.update();
-    for(auto &circle : circles){
-        if (circle->getPosition().y > ofGetHeight()) {
-            circles.erase(circles.begin());
-        };
-    }
+
+    // getting memory access errors here. 
+//    for(auto &circle : circles){
+//        if (circle->getPosition().y > ofGetHeight()) {
+//            circles.erase(circles.begin());
+//        };
+//    }
+    
     
 //    for (int i = 0; i < ballsVector.size(); i++){
 //        ballsVector[i].update();
@@ -87,7 +90,9 @@ void ofApp::mousePressed(int x, int y, int button){
     auto circle = std::make_shared<ofxBox2dCircle>();
     circle->setPhysics(1, 0.7, 0.7);
     circle->setup(box2d.getWorld(), ofGetWidth()/2, ofGetHeight()/2, 3);
+    
     circles.push_back(circle);
+    
     
 }
 

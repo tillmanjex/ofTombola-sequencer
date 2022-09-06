@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include "ofMain.h"
+#include "ofxBox2d.h"
 
 #endif /* ofTombola_hpp */
 
@@ -25,7 +26,9 @@ public:
     ofPoint pointA;
     ofPoint pointB;
     
-    vector <ofVec3f> tombolaVerts;
+    vector <ofVec2f> tombolaVerts;
+    vector <shared_ptr<ofxBox2dEdge>> edges;
+    
 
   
 private:
@@ -44,6 +47,7 @@ private:
     
     // tomobola measurement utility
     ofVec2f canvasCenter;
+    
 
 
     

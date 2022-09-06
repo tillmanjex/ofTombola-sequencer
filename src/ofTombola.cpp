@@ -49,6 +49,9 @@ ofTombola::ofTombola() {
     v11.set(canvasCenter.x + radius * cos(glm::radians(360.0)), canvasCenter.y + radius * sin(glm::radians(360.0)), 0);
     tombolaVerts.push_back(v11);
     
+    
+    
+
 }
 
 ofTombola::~ofTombola(){
@@ -64,26 +67,31 @@ void ofTombola::update(int radiusMod) {
 
 
 void ofTombola::draw() {
-    // The lines need to be drawn as singular lines, hence the draw/clear sequencing
-    ofDrawEllipse(712, 384, 20, 20); // just a marker for the first point for visual debugging
+    
+//    ofDrawEllipse(712, 384, 20, 20); // just a marker for the first point for visual debugging
     tombolaLine.lineTo(v0);
     tombolaLine.lineTo(v1);
-    
+
     tombolaLine.lineTo(v2);
     tombolaLine.lineTo(v3);
-    
+
     tombolaLine.lineTo(v4);
     tombolaLine.lineTo(v5);
-    
+
     tombolaLine.lineTo(v6);
     tombolaLine.lineTo(v7);
-    
+
     tombolaLine.lineTo(v8);
     tombolaLine.lineTo(v9);
-    
+
     tombolaLine.lineTo(v10);
     tombolaLine.lineTo(v11);
-    tombolaLine.draw();
+    
+    auto edges = std::make_shared<ofxBox2dEdge>();
+    edges->addVertexes(tombolaLine);
+    edges->create(box2d.getWorld());
+    edges->draw();
+  //  tombolaLine.draw();
 
 
 }
