@@ -25,6 +25,7 @@ public:
     ofPoint pointA;
     ofPoint pointB;
     
+    vector <ofVec3f> tombolaVerts;
 
   
 private:
@@ -32,7 +33,12 @@ private:
     float rotation{};
     float spinSpeed{};
     float radius{};
+    
+    //vector <ofPolyline> tombolaLines;
+    
+    
     ofPolyline tombolaLine;
+    
     ofVec3f v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11;
     ofVec3f v0mod, m1mod, v2mod, v3mod;
     

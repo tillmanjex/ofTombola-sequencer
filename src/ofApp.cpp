@@ -12,20 +12,31 @@ void ofApp::update(){
     
     for (int i = 0; i < ballsVector.size(); i++){
         ballsVector[i].update();
+        ballsVector[i].collision(tombola.tombolaVerts[0], tombola.tombolaVerts[1]);
+        ballsVector[i].collision(tombola.tombolaVerts[2], tombola.tombolaVerts[3]);
+        ballsVector[i].collision(tombola.tombolaVerts[4], tombola.tombolaVerts[5]);
+        ballsVector[i].collision(tombola.tombolaVerts[6], tombola.tombolaVerts[7]);
+        ballsVector[i].collision(tombola.tombolaVerts[8], tombola.tombolaVerts[9]);
+        ballsVector[i].collision(tombola.tombolaVerts[10], tombola.tombolaVerts[11]);
+        
+       // cout << tombola.tombolaVerts[0] << endl;
+        // remove balls from array when off screen: #works
         if (ballsVector[i].location.y > ofGetHeight()) {
             ballsVector.erase(ballsVector.begin()+i);
             
         };
     };
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
    
     tombola.draw();
-    for (int i = 0; i < ballsVector.size(); i++){
-        ballsVector[i].draw();
+    for (auto & b : ballsVector){
+        b.draw();
     };
+
 
 }
 

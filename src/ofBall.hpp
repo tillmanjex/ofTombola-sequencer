@@ -27,19 +27,25 @@ public:
     void setMusicalParams(); // receive and storing midi data?
     void playNote(); // basically play note on collision - take data from setMusicalParams();
     void musicalScale();
+    void collision(ofVec3f vertexA, ofVec3f vertexB);
     
     int bouncieness{};
     int radius{10};
     int noteValue{};
+    float distance{};
+    ofVec3f intersection;
+    ofVec2f lineSegA;
+    
+    
     
     // Forces
-    ofVec2f location;
-    ofVec2f velocity;
-    ofVec2f acceleration;
-    ofVec2f speed;
+    ofVec3f location;
+    ofVec3f velocity;
+    ofVec3f acceleration;
+    ofVec3f speed;
     float mass{10};
     
-
+    
 
     
     
