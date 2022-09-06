@@ -40,8 +40,8 @@ void ofBall::draw() {
 
 void ofBall::collision(ofVec3f vertexA, ofVec3f vertexB) {
     
-    ofLineSegmentIntersection(lineSegA.set(vertexA.x, vertexA.y), ofVec2f(vertexB.x, vertexB.y), ofVec2f(location.x, location.y), ofVec2f(location.x, location.y), intersection);
-    cout << intersection << endl;
+//    ofLineSegmentIntersection(lineSegA.set(vertexA.x, vertexA.y), ofVec2f(vertexB.x, vertexB.y), ofVec2f(location.x, location.y), ofVec2f(location.x, location.y), intersection);
+//    cout << intersection << endl;
     
 //    distance = vertexA.distance(location) + vertexB.distance(location);
 //    cout << distance << endl;

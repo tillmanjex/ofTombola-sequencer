@@ -3,6 +3,8 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(0, 0, 0);
+    box2d.init();
+    box2d.setGravity(0, 30);
     
    
 }

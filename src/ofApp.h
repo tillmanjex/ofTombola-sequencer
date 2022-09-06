@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofTombola.hpp"
 #include "ofBall.hpp"
+#include "ofxBox2d.h"
 
 class ofApp : public ofBaseApp{
 
@@ -27,5 +28,7 @@ class ofApp : public ofBaseApp{
     ofBall ball;
     vector <ofBall> ballsVector;
   
+    ofxBox2d box2d;
+    ofxBox2dCircle circle;
     
 };
