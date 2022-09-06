@@ -25,10 +25,13 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     ofTombola tombola;
-    ofBall ball;
-    vector <ofBall> ballsVector;
+    //ofBall ball;
+    //vector <ofBall> ballsVector;
   
     ofxBox2d box2d;
-    ofxBox2dCircle circle;
+    
+    // make an array ofxBox2dCircle class pointers 
+    vector <shared_ptr<ofxBox2dCircle> > circles;
+    
     
 };

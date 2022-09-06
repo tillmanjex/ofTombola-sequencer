@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include "ofMain.h"
-
+#include "ofxBox2d.h"
 
 #endif /* ofBall_hpp */
 
@@ -27,23 +27,26 @@ public:
     void setMusicalParams(); // receive and storing midi data?
     void playNote(); // basically play note on collision - take data from setMusicalParams();
     void musicalScale();
-    void collision(ofVec3f vertexA, ofVec3f vertexB);
+//    void collision(ofVec3f vertexA, ofVec3f vertexB);
     
-    int bouncieness{};
-    int radius{10};
+//    int bouncieness{};
+//    int radius{10};
     int noteValue{};
-    float distance{};
-    ofVec3f intersection;
-    ofVec2f lineSegA;
+//    float distance{};
+//    ofVec3f intersection;
+//    ofVec2f lineSegA;
     
+    // Box2d
+    ofxBox2d box2d;
+    //ofxBox2dCircle ball;
     
     
     // Forces
-    ofVec3f location;
-    ofVec3f velocity;
-    ofVec3f acceleration;
-    ofVec3f speed;
-    float mass{10};
+//    ofVec3f location;
+//    ofVec3f velocity;
+//    ofVec3f acceleration;
+//    ofVec3f speed;
+//    float mass{10};
     
     
 
