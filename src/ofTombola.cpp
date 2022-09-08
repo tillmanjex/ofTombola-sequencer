@@ -6,6 +6,8 @@
 //
 
 #include "ofTombola.hpp"
+#include "ofApp.h"
+
 
 ofTombola::ofTombola() {
     
@@ -89,7 +91,7 @@ void ofTombola::draw() {
     
     auto edges = std::make_shared<ofxBox2dEdge>();
     edges->addVertexes(tombolaLine);
-    edges->create(box2d.getWorld());
+   // edges->create(box2d.getWorld());
     edges->draw();
   //  tombolaLine.draw();
 

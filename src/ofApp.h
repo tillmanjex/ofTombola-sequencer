@@ -1,8 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofTombola.hpp"
-#include "ofBall.hpp"
 #include "ofxBox2d.h"
 
 class ofApp : public ofBaseApp{
@@ -23,15 +21,32 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+        void tombolaVerts();
     
-    ofTombola tombola;
-    //ofBall ball;
-    //vector <ofBall> ballsVector;
-  
+    float radius{};
+    
     ofxBox2d box2d;
-    ofxBox2dEdge testEdge;
     
-    // make an array ofxBox2dCircle class pointers 
+    // Tombola
+    ofVec3f v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11;
+    ofVec3f v0mod, m1mod, v2mod, v3mod;
+    ofVec2f canvasCenter;
+    vector <ofVec3f> tVerts;
+    vector <ofVec2f> tombolaVertsArray;
+    
+    vector <shared_ptr<ofxBox2dEdge>> tombolaEdges;
+    vector <ofPolyline> lines;
+    
+    ofxBox2dEdge tEdge0;
+    
+    ofPolyline tLine0;
+    ofPolyline tLine1;
+    ofPolyline tLine2;
+    ofPolyline tLine3;
+    ofPolyline tLine4;
+    ofPolyline tLine5;
+    
+    // Ball
     vector <shared_ptr<ofxBox2dCircle>> circles;
     
     
