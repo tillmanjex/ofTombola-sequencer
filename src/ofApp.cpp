@@ -8,22 +8,30 @@ void ofApp::setup(){
     ofBackground(0, 0, 0);
     canvasCenter.set(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2); // (512, 384)
     
+    // datGui
+    gui = new ofxDatGui( ofxDatGuiAnchor::TOP_RIGHT);
+    gui->addButton("Spawn Ball");
+    gui->addSlider("Tombola Size", 0.5, 1.5);
+    
     // ofxBox2d Params
     box2d.init();
     box2d.setGravity(0, 10);
     box2d.setFPS(60.0);
     
-    // User Functions
-    tombolaVerts();
+    // Custom Functions
+    tombolaInit();
     
     
     
 }
 
+
+
 //--------------------------------------------------------------
 void ofApp::update(){
     
     box2d.update();
+    gui->update();
 
     
     
@@ -32,7 +40,8 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
    
-    
+    gui->draw();
+
     
     for (auto &circle : circles){
         ofFill();
@@ -70,12 +79,14 @@ void ofApp::keyReleased(int key){
 void ofApp::mouseMoved(int x, int y ){
     radius = ofMap(ofGetMouseX(), 0, ofGetWidth(), 0.5, 2.0);
     
+
     for (auto &edge : tEdges){
         
         edge->scale(radius, radius);
        
         edge->create(box2d.getWorld());
     };
+    
 }
 
 //--------------------------------------------------------------
@@ -129,7 +140,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 
-void ofApp::tombolaVerts(){
+void ofApp::tombolaInit(){
 
     // vertex positions for tomobola
     v0.set(200, 0, 0);

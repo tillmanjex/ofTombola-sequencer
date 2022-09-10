@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxBox2d.h"
+#include "ofxDatGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -21,28 +22,20 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-        void tombolaVerts();
+        void tombolaInit();
     
     float radius{};
     
+    
     ofxBox2d box2d;
-    ofFbo fbo;
+    ofxDatGui* gui;
+    ofxDatGuiSlider* slider;
+    void onSliderEvent(ofxDatGuiSliderEvent e);
     
     // Tombola
     ofVec3f v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11;
     ofVec2f canvasCenter;
-    // vector <ofVec3f> tVerts;
-    // vector <ofVec2f> tombolaVertsArray;
-    
     vector <shared_ptr<ofxBox2dEdge>> tEdges;
-    // vector <ofPolyline> lines;
-    
-    ofxBox2dEdge tEdge0;
-//    ofxBox2dEdge tEdge1;
-//    ofxBox2dEdge tEdge2;
-//    ofxBox2dEdge tEdge3;
-//    ofxBox2dEdge tEdge4;
-//    ofxBox2dEdge tEdge5;
     
     ofPolyline tLine0;
     ofPolyline tLine1;
