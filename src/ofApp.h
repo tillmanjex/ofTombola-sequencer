@@ -27,10 +27,15 @@ class ofApp : public ofBaseApp{
     float radius{};
     
     
-    ofxBox2d box2d;
+    // ofxDatGui
     ofxDatGui* gui;
-    ofxDatGuiSlider* slider;
+    ofxDatGuiButton* ballSpawn;
+    ofxDatGuiSlider* sliderRadius;
+    void onButtonEvent(ofxDatGuiButtonEvent e);
     void onSliderEvent(ofxDatGuiSliderEvent e);
+    
+    // ofxBox2d
+    ofxBox2d box2d;
     
     // Tombola
     ofVec3f v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11;
