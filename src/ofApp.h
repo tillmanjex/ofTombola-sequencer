@@ -29,15 +29,19 @@ class ofApp : public ofBaseApp{
     
     // Tombola
     ofVec3f v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11;
-    ofVec3f v0mod, m1mod, v2mod, v3mod;
     ofVec2f canvasCenter;
-    vector <ofVec3f> tVerts;
-    vector <ofVec2f> tombolaVertsArray;
+    // vector <ofVec3f> tVerts;
+    // vector <ofVec2f> tombolaVertsArray;
     
-    vector <shared_ptr<ofxBox2dEdge>> tombolaEdges;
-    vector <ofPolyline> lines;
+    vector <shared_ptr<ofxBox2dEdge>> tEdges;
+    // vector <ofPolyline> lines;
     
     ofxBox2dEdge tEdge0;
+//    ofxBox2dEdge tEdge1;
+//    ofxBox2dEdge tEdge2;
+//    ofxBox2dEdge tEdge3;
+//    ofxBox2dEdge tEdge4;
+//    ofxBox2dEdge tEdge5;
     
     ofPolyline tLine0;
     ofPolyline tLine1;
