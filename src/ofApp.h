@@ -22,15 +22,22 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
         void tombolaInit();
+        void tombolaRotate(float rotAngle);
+        void tombolaScale(float scale);
+    
     
     float radius{};
+    float value{};
+
     
     
     // ofxDatGui
     ofxDatGui* gui;
     ofxDatGuiButton* ballSpawn;
     ofxDatGuiSlider* sliderRadius;
+    ofxDatGuiSlider* sliderRotate;
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onSliderEvent(ofxDatGuiSliderEvent e);
     
