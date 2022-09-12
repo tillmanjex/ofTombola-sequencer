@@ -36,8 +36,7 @@ class ofApp : public ofBaseApp{
     // ofxDatGui
     ofxDatGui* gui;
     ofxDatGuiButton* ballSpawn;
-    ofxDatGuiSlider* sliderRadius;
-    ofxDatGuiSlider* sliderRotate;
+    ofxDatGuiSlider* sliderRadius, sliderRotate;
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onSliderEvent(ofxDatGuiSliderEvent e);
     

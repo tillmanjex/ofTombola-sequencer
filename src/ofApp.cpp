@@ -53,7 +53,6 @@ void ofApp::draw(){
 
     for (auto &edge : tEdges){
         ofSetColor(255, 0, 80);
-        
         ofTranslate(canvasCenter.x, canvasCenter.y);
         edge->setPosition(canvasCenter);
         edge->draw();
@@ -80,13 +79,17 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
 
 //--------------------------------------------------------------
 void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
+    
+    // clear polylines for fresh input
     tLine0.clear();
     tLine1.clear();
     tLine2.clear();
     tLine3.clear();
     tLine4.clear();
     tLine5.clear();
+    
     for (auto &edge : tEdges){
+        // clear &edge on each iteration for correct drawing behavior
         edge->clear();
         
         if (e.target->is("Tombola Size")){
@@ -110,14 +113,19 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
             // add the updated verticies to the polyline objects
             tLine0.addVertex(v0);
             tLine0.addVertex(v1);
+        
             tLine1.addVertex(v1);
             tLine1.addVertex(v2);
+        
             tLine2.addVertex(v2);
             tLine2.addVertex(v3);
+        
             tLine3.addVertex(v3);
             tLine3.addVertex(v4);
+        
             tLine4.addVertex(v4);
             tLine4.addVertex(v5);
+        
             tLine5.addVertex(v5);
             tLine5.addVertex(v0);
                
