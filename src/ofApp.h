@@ -40,6 +40,7 @@ class ofApp : public ofBaseApp{
     ofxMidiOut midi;
     
     MidiData midiVoice;
+    vector <shared_ptr<MidiData>> midiVoices;
     
     // ofxDatGui
     ofxDatGui* gui;

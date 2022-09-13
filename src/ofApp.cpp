@@ -104,6 +104,12 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         circle->setPhysics(1, 0.7, 0.7);
         circle->setup(box2d.getWorld(), canvasCenter.x, canvasCenter.y, 5);
         circle->shouldRemoveOffScreen(circle);
+        
+        // assign an instance of the MidiData class to the ball.
+        circle->setData(new MidiData());
+        auto * md = (MidiData*)circle->getData();
+        
+        
         circles.push_back(circle);
     };
     
@@ -196,14 +202,24 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
         // if we collide with the ground we do not
         // want to play a sound. this is how you do that
         if(e.a->GetType() == b2Shape::e_edge || e.b->GetType() == b2Shape::e_edge) {
-            cout << "contact start" << endl;
+            
+            midiVoice.playNote();
+            
+            
+            // trying the technique from example here
+            MidiData * aData = (MidiData*)e.a->GetBody()->GetUserData();
+            MidiData * bData = (MidiData*)e.b->GetBody()->GetUserData();
+            
+            cout << aData << endl;
+//            cout << aData->getData() << endl;
 //            SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
 //            SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
             
 //            if(aData) {
 //                aData->bHit = true;
-//                sound[aData->soundID].play();
-//            }
+//                aData->playNote();
+//                cout << "hjere" << endl;
+//            };
 //
 //            if(bData) {
 //                bData->bHit = true;
@@ -216,7 +232,7 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
 //--------------------------------------------------------------
 void ofApp::contactEnd(ofxBox2dContactArgs &e) {
     if(e.a != NULL && e.b != NULL) {
-        cout << "contact end" << endl;
+
 //        SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
 //        SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
 //

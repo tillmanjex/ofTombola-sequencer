@@ -23,7 +23,6 @@ public:
     
     void update(std::string port, int channel, int scaleSelect);
     void playNote();
-    int scale(int select);
     
     ofxMidiOut midiOut;
     int channel;
@@ -32,6 +31,7 @@ public:
     int pan, bend, touch, polytouch;
     int value;
     int dMajSel, dMinSel;
+    bool bHit;
     
     std::vector <int> dMaj;
     std::vector <int> dMin;

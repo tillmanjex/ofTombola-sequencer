@@ -25,6 +25,8 @@ MidiData::MidiData(){
     bend = 0;
     touch = 0;
     polytouch = 0;
+    
+    bHit = false;
 }
 
 MidiData::~MidiData(){
@@ -48,7 +50,7 @@ void MidiData::playNote(){
     
     velocity = int(ofRandom(30, 100));
     midiOut.sendNoteOn(channel, note, velocity);
-    std::cout << "note sent on ch: " << channel << std::endl;
+
 };
 
 
