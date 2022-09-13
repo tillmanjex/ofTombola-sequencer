@@ -9,6 +9,7 @@
 #define ofxMidiData_hpp
 
 #include <stdio.h>
+#include "ofMain.h"
 #include "ofxMidi.h"
 
 #endif /* ofxMidiData_hpp */
@@ -20,14 +21,18 @@ public:
      MidiData();
      ~MidiData();
     
-    void update(std::string port);
-    void playNote(int ch);
+    void update(std::string port, int channel, int scaleSelect);
+    void playNote();
+    int scale(int select);
     
     ofxMidiOut midiOut;
     int channel;
     unsigned int currentPgm;
     int note, velocity;
     int pan, bend, touch, polytouch;
+    int value;
+    int dMajSel, dMinSel;
     
-    std::vector <int> notes;
+    std::vector <int> dMaj;
+    std::vector <int> dMin;
 };

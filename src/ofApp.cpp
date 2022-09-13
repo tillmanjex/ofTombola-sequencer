@@ -65,7 +65,7 @@ void ofApp::update(){
     
     box2d.update();
     gui->update();
-    midiVoice.update(midi.getName());
+    midiVoice.update(midi.getName(), 1, 0);
 
     
 }
@@ -281,8 +281,8 @@ void ofApp::tombolaInit(){
 void ofApp::keyPressed(int key){
     if (key == 'a') {
         // use it for testing
-        midiVoice.playNote(1);
-        //midi.sendNoteOn(1, 60);
+        midiVoice.playNote();
+
     };
 }
 
