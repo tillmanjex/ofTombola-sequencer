@@ -8,6 +8,17 @@ void ofApp::setup(){
     ofBackground(0, 0, 0);
     canvasCenter.set(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2); // (512, 384)
     
+    // ofxMidi
+    midiOut.openPort(0);
+    channel = 1;
+    currentPgm = 0;
+    note = 0;
+    velocity = 0;
+    pan = 0;
+    bend = 0;
+    touch = 0;
+    polytouch = 0;
+    
     // datGui
     gui = new ofxDatGui( ofxDatGuiAnchor::TOP_RIGHT);
     ofxDatGuiButton* ballSpawn = gui->addButton("Spawn Ball");
@@ -27,6 +38,12 @@ void ofApp::setup(){
     
     
     
+}
+//--------------------------------------------------------------
+void ofApp::exit() {
+    
+    // clean up
+    midiOut.closePort();
 }
 
 //--------------------------------------------------------------

@@ -3,6 +3,8 @@
 #include "ofMain.h"
 #include "ofxBox2d.h"
 #include "ofxDatGui.h"
+#include "ofxMidi.h"
+
 
 class ofApp : public ofBaseApp{
 
@@ -10,6 +12,7 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+        void exit();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -31,7 +34,12 @@ class ofApp : public ofBaseApp{
     float radius{};
     float value{};
 
-    
+    //ofxMidi
+    ofxMidiOut midiOut;
+    int channel;
+    unsigned int currentPgm;
+    int note, velocity;
+    int pan, bend, touch, polytouch;
     
     // ofxDatGui
     ofxDatGui* gui;
