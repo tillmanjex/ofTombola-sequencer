@@ -25,8 +25,7 @@ MidiData::MidiData(){
     bend = 0;
     touch = 0;
     polytouch = 0;
-    
-    bHit = false;
+
 }
 
 MidiData::~MidiData(){

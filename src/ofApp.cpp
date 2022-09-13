@@ -68,6 +68,8 @@ void ofApp::update(){
     midiVoice.update(midi.getName(), 1, 0);
 
     
+
+    
 }
 
 //--------------------------------------------------------------
@@ -108,7 +110,7 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         // assign an instance of the MidiData class to the ball.
         circle->setData(new MidiData());
         auto * md = (MidiData*)circle->getData();
-        
+        md->bHit = false;
         
         circles.push_back(circle);
     };
@@ -118,7 +120,7 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
     for (int i=0; i < outPorts.size(); i++) {
         if (e.target->is(outPorts[i])) {
             // close other ports first
-//            midi.closePort();
+            midi.closePort();
             midi.openPort(outPorts[i]);
             cout << "port" << outPorts[i] << "opened" << endl;
         };
@@ -201,25 +203,29 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
         
         // if we collide with the ground we do not
         // want to play a sound. this is how you do that
-        if(e.a->GetType() == b2Shape::e_edge || e.b->GetType() == b2Shape::e_edge) {
+        if(e.a->GetType() == b2Shape::e_circle || e.b->GetType() == b2Shape::e_circle) {
             
-            midiVoice.playNote();
+//            midiVoice.playNote();
             
             
             // trying the technique from example here
+            // seems like the class object gets paired with a variable
+            // it can is then assigned a pointer to the data, where it can
+            // then have acecss to the data stored in it from when it was created
             MidiData * aData = (MidiData*)e.a->GetBody()->GetUserData();
             MidiData * bData = (MidiData*)e.b->GetBody()->GetUserData();
             
-            cout << aData << endl;
+            aData->update(midi.getName(), 1, 0);
+            
 //            cout << aData->getData() << endl;
 //            SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
 //            SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
             
-//            if(aData) {
-//                aData->bHit = true;
-//                aData->playNote();
-//                cout << "hjere" << endl;
-//            };
+            if(aData) {
+                aData->bHit = true;
+                aData->playNote();
+                cout << "hjere" << endl;
+            };
 //
 //            if(bData) {
 //                bData->bHit = true;
