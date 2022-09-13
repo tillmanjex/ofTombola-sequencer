@@ -4,6 +4,7 @@
 #include "ofxBox2d.h"
 #include "ofxDatGui.h"
 #include "ofxMidi.h"
+#include "ofxMidiData.hpp"
 
 
 class ofApp : public ofBaseApp{
@@ -36,7 +37,9 @@ class ofApp : public ofBaseApp{
     
 
     // ofxMidi
-    ofxMidiOut midiOut;
+    ofxMidiOut midi;
+    
+    MidiData midiVoice;
     
     // ofxDatGui
     ofxDatGui* gui;
@@ -47,8 +50,6 @@ class ofApp : public ofBaseApp{
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onSliderEvent(ofxDatGuiSliderEvent e);
     std::vector <string> outPorts;
-
-
     
     // ofxBox2d
     ofxBox2d box2d;

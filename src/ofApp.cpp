@@ -1,6 +1,7 @@
 #include "ofApp.h"
 
 
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     // Utility
@@ -9,25 +10,17 @@ void ofApp::setup(){
     canvasCenter.set(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2); // (512, 384)
     
     // ofxMidi
-    
-    midiOut.openPort(0);
-    outPorts = midiOut.getOutPortList();
-    
-
-    
-    // datGui
-//    for (int ports = 0; ports < midiOut.getNumOutPorts(); ports++) {
-//        midiOutPorts.push
-//    }
+    midi.openPort(0);
+    outPorts = midi.getOutPortList();
     
     
+    // ofxDatGui
     gui = new ofxDatGui( ofxDatGuiAnchor::TOP_RIGHT);
-    
     
     ofxDatGuiButton* ballSpawn = gui->addButton("Spawn Ball");
     gui->onButtonEvent(this, &ofApp::onButtonEvent);
     
-    ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 0, 200);
+    ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 100, 300);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
     ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -5, 5);
@@ -35,6 +28,9 @@ void ofApp::setup(){
     
     ofxDatGuiLabel* midiOut = gui->addLabel("Midi Out Select (Below)");
 
+    // make as many buttons to open ports as there are ports available.
+    // datGui dropdown box had impossible bugs for me to fix.
+    // This was the only good alternate option.
     for (int i = 0; i < outPorts.size(); i++) {
         // outPorts.push_back(midiOut.getOutPortList()[i]);
         gui->addButton(outPorts[i]);
@@ -46,7 +42,7 @@ void ofApp::setup(){
     box2d.enableEvents();
 //    box2d.enableGrabbing() // maybe implement this later
     
-    // register the listener so that we get the events
+    // register the contact listeners
     ofAddListener(box2d.contactStartEvents, this, &ofApp::contactStart);
     ofAddListener(box2d.contactEndEvents, this, &ofApp::contactEnd);
     
@@ -55,12 +51,13 @@ void ofApp::setup(){
     
     
     
+    
 }
 //--------------------------------------------------------------
 void ofApp::exit() {
     
     // clean up
-    midiOut.closePort();
+    midi.closePort();
 }
 
 //--------------------------------------------------------------
@@ -68,6 +65,7 @@ void ofApp::update(){
     
     box2d.update();
     gui->update();
+    midiVoice.update(midi.getName());
 
     
 }
@@ -108,9 +106,15 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         circle->shouldRemoveOffScreen(circle);
         circles.push_back(circle);
     };
+    
+    // check against all port options if they were clicked
+    // if so, then close other ports and open the clicked port
     for (int i=0; i < outPorts.size(); i++) {
         if (e.target->is(outPorts[i])) {
-            midiOut.openPort(outPorts[i]);
+            // close other ports first
+//            midi.closePort();
+            midi.openPort(outPorts[i]);
+            cout << "port" << outPorts[i] << "opened" << endl;
         };
     };
 
@@ -277,7 +281,8 @@ void ofApp::tombolaInit(){
 void ofApp::keyPressed(int key){
     if (key == 'a') {
         // use it for testing
-        
+        midiVoice.playNote(1);
+        //midi.sendNoteOn(1, 60);
     };
 }
 

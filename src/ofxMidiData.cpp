@@ -7,9 +7,9 @@
 
 #include "ofxMidiData.hpp"
 
-MidiData::MidiData(int ch){
+MidiData::MidiData(){
 
-    channel = ch;
+    channel = 1;
     currentPgm = 0;
     note = 0;
     velocity = 0;
@@ -23,8 +23,15 @@ MidiData::~MidiData(){
     
 }
 
-void MidiData::playNote(){
+void MidiData::update(std::string port){
+    // update port
+    midiOut.openPort(port);
+};
+
+void MidiData::playNote(int ch){
+    
     note = 70;
     velocity = 64;
-    midiOut.sendNoteOn(channel, note, velocity);
+    midiOut.sendNoteOn(ch, note, velocity);
+    std::cout << "note sent on ch:" << ch << std::endl;
 }

@@ -17,10 +17,11 @@ class MidiData {
     
 public:
     
-     MidiData(int ch);
+     MidiData();
      ~MidiData();
     
-    void playNote();
+    void update(std::string port);
+    void playNote(int ch);
     
     ofxMidiOut midiOut;
     int channel;
