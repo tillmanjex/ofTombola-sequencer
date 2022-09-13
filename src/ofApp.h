@@ -33,23 +33,27 @@ class ofApp : public ofBaseApp{
     
     float radius{};
     float value{};
+    
 
-    //ofxMidi
+    // ofxMidi
     ofxMidiOut midiOut;
-    int channel;
-    unsigned int currentPgm;
-    int note, velocity;
-    int pan, bend, touch, polytouch;
     
     // ofxDatGui
     ofxDatGui* gui;
     ofxDatGuiButton* ballSpawn;
-    ofxDatGuiSlider* sliderRadius, sliderRotate;
+    ofxDatGuiSlider* slider;
+    ofxDatGuiLabel* label;
+    vector <ofxDatGuiButton> midiOutPorts;
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onSliderEvent(ofxDatGuiSliderEvent e);
+    std::vector <string> outPorts;
+
+
     
     // ofxBox2d
     ofxBox2d box2d;
+    void contactStart(ofxBox2dContactArgs &e);
+    void contactEnd(ofxBox2dContactArgs &e);
     
     // Tombola
     ofVec3f v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11;

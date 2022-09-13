@@ -9,18 +9,21 @@ void ofApp::setup(){
     canvasCenter.set(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2); // (512, 384)
     
     // ofxMidi
+    
     midiOut.openPort(0);
-    channel = 1;
-    currentPgm = 0;
-    note = 0;
-    velocity = 0;
-    pan = 0;
-    bend = 0;
-    touch = 0;
-    polytouch = 0;
+    outPorts = midiOut.getOutPortList();
+    
+
     
     // datGui
+//    for (int ports = 0; ports < midiOut.getNumOutPorts(); ports++) {
+//        midiOutPorts.push
+//    }
+    
+    
     gui = new ofxDatGui( ofxDatGuiAnchor::TOP_RIGHT);
+    
+    
     ofxDatGuiButton* ballSpawn = gui->addButton("Spawn Ball");
     gui->onButtonEvent(this, &ofApp::onButtonEvent);
     
@@ -30,8 +33,22 @@ void ofApp::setup(){
     ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -5, 5);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
+    ofxDatGuiLabel* midiOut = gui->addLabel("Midi Out Select (Below)");
+
+    for (int i = 0; i < outPorts.size(); i++) {
+        // outPorts.push_back(midiOut.getOutPortList()[i]);
+        gui->addButton(outPorts[i]);
+        gui->onButtonEvent(this, &ofApp::onButtonEvent);
+    };
+    
     // ofxBox2d fps/gravity x,y)
     box2d.init(60.0, 0, 10);
+    box2d.enableEvents();
+//    box2d.enableGrabbing() // maybe implement this later
+    
+    // register the listener so that we get the events
+    ofAddListener(box2d.contactStartEvents, this, &ofApp::contactStart);
+    ofAddListener(box2d.contactEndEvents, this, &ofApp::contactEnd);
     
     // Custom Functions
     tombolaInit();
@@ -90,7 +107,15 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         circle->setup(box2d.getWorld(), canvasCenter.x, canvasCenter.y, 5);
         circle->shouldRemoveOffScreen(circle);
         circles.push_back(circle);
-    }
+    };
+    for (int i=0; i < outPorts.size(); i++) {
+        if (e.target->is(outPorts[i])) {
+            midiOut.openPort(outPorts[i]);
+        };
+    };
+
+    
+    
 
 }
 
@@ -158,6 +183,47 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
     };
     
     
+}
+
+//--------------------------------------------------------------
+void ofApp::contactStart(ofxBox2dContactArgs &e) {
+    if(e.a != NULL && e.b != NULL) {
+        
+        // if we collide with the ground we do not
+        // want to play a sound. this is how you do that
+        if(e.a->GetType() == b2Shape::e_edge || e.b->GetType() == b2Shape::e_edge) {
+            cout << "contact start" << endl;
+//            SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
+//            SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
+            
+//            if(aData) {
+//                aData->bHit = true;
+//                sound[aData->soundID].play();
+//            }
+//
+//            if(bData) {
+//                bData->bHit = true;
+//                sound[bData->soundID].play();
+//            }
+        }
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::contactEnd(ofxBox2dContactArgs &e) {
+    if(e.a != NULL && e.b != NULL) {
+        cout << "contact end" << endl;
+//        SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
+//        SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
+//
+//        if(aData) {
+//            aData->bHit = false;
+//        }
+//
+//        if(bData) {
+//            bData->bHit = false;
+//        }
+    }
 }
 
 //--------------------------------------------------------------
