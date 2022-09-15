@@ -167,65 +167,70 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
 //--------------------------------------------------------------
 void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
     
-    // clear polylines for fresh input
-    tLine0.clear();
-    tLine1.clear();
-    tLine2.clear();
-    tLine3.clear();
-    tLine4.clear();
-    tLine5.clear();
     
-    for (auto &edge : tEdges){
-        // clear &edge on each iteration for correct drawing behavior
-        edge->clear();
-        
-        if (e.target->is("Tombola Size")){
-
-            v0.set(e.value * cos(glm::radians(0.0)), e.value * sin(glm::radians(0.0)), 0);
-            v1.set(e.value * cos(glm::radians(60.0)), e.value * sin(glm::radians(60.0)), 0);
-            v2.set(e.value * cos(glm::radians(120.0)), e.value * sin(glm::radians(120.0)), 0);
-            v3.set(e.value * cos(glm::radians(180.0)), e.value * sin(glm::radians(180.0)), 0);
-            v4.set(e.value * cos(glm::radians(240.0)), e.value * sin(glm::radians(240.0)), 0);
-            v5.set(e.value * cos(glm::radians(300.0)), e.value * sin(glm::radians(300.0)), 0);
-            
-        } else if (e.target->is("Tombola Rotate")) {
-            
-            v0.rotate(e.value, ofVec3f(0, 0, 1));
-            v1.rotate(e.value, ofVec3f(0, 0, 1));
-            v2.rotate(e.value, ofVec3f(0, 0, 1));
-            v3.rotate(e.value, ofVec3f(0, 0, 1));
-            v4.rotate(e.value, ofVec3f(0, 0, 1));
-            v5.rotate(e.value, ofVec3f(0, 0, 1));
-        }
-            // add the updated verticies to the polyline objects
-            tLine0.addVertex(v0);
-            tLine0.addVertex(v1);
-        
-            tLine1.addVertex(v1);
-            tLine1.addVertex(v2);
-        
-            tLine2.addVertex(v2);
-            tLine2.addVertex(v3);
-        
-            tLine3.addVertex(v3);
-            tLine3.addVertex(v4);
-        
-            tLine4.addVertex(v4);
-            tLine4.addVertex(v5);
-        
-            tLine5.addVertex(v5);
-            tLine5.addVertex(v0);
-               
-            // add the updated polylines to edges
-            edge->addVertexes(tLine0);
-            edge->addVertexes(tLine1);
-            edge->addVertexes(tLine2);
-            edge->addVertexes(tLine3);
-            edge->addVertexes(tLine4);
-            edge->addVertexes(tLine5);
-            edge->create(box2d.getWorld());
-            
-    };
+    if (e.target->is("Tombola Size")){
+        tombolaScale(e.value);
+    }
+    
+//    // clear polylines for fresh input
+//    tLine0.clear();
+//    tLine1.clear();
+//    tLine2.clear();
+//    tLine3.clear();
+//    tLine4.clear();
+//    tLine5.clear();
+//
+//    for (auto &edge : tEdges){
+//        // clear &edge on each iteration for correct drawing behavior
+//        edge->clear();
+//
+//        if (e.target->is("Tombola Size")){
+//
+//            v0.set(e.value * cos(glm::radians(0.0)), e.value * sin(glm::radians(0.0)), 0);
+//            v1.set(e.value * cos(glm::radians(60.0)), e.value * sin(glm::radians(60.0)), 0);
+//            v2.set(e.value * cos(glm::radians(120.0)), e.value * sin(glm::radians(120.0)), 0);
+//            v3.set(e.value * cos(glm::radians(180.0)), e.value * sin(glm::radians(180.0)), 0);
+//            v4.set(e.value * cos(glm::radians(240.0)), e.value * sin(glm::radians(240.0)), 0);
+//            v5.set(e.value * cos(glm::radians(300.0)), e.value * sin(glm::radians(300.0)), 0);
+//
+//        } else if (e.target->is("Tombola Rotate")) {
+//
+//            v0.rotate(e.value, ofVec3f(0, 0, 1));
+//            v1.rotate(e.value, ofVec3f(0, 0, 1));
+//            v2.rotate(e.value, ofVec3f(0, 0, 1));
+//            v3.rotate(e.value, ofVec3f(0, 0, 1));
+//            v4.rotate(e.value, ofVec3f(0, 0, 1));
+//            v5.rotate(e.value, ofVec3f(0, 0, 1));
+//        }
+//            // add the updated verticies to the polyline objects
+//            tLine0.addVertex(v0);
+//            tLine0.addVertex(v1);
+//
+//            tLine1.addVertex(v1);
+//            tLine1.addVertex(v2);
+//
+//            tLine2.addVertex(v2);
+//            tLine2.addVertex(v3);
+//
+//            tLine3.addVertex(v3);
+//            tLine3.addVertex(v4);
+//
+//            tLine4.addVertex(v4);
+//            tLine4.addVertex(v5);
+//
+//            tLine5.addVertex(v5);
+//            tLine5.addVertex(v0);
+//
+//            // add the updated polylines to edges
+//            edge->addVertexes(tLine0);
+//            edge->addVertexes(tLine1);
+//            edge->addVertexes(tLine2);
+//            edge->addVertexes(tLine3);
+//            edge->addVertexes(tLine4);
+//            edge->addVertexes(tLine5);
+//            edge->create(box2d.getWorld());
+//
+//    };
     
     
 }
@@ -370,7 +375,7 @@ void ofApp::tombolaInit(){
 void ofApp::keyPressed(int key){
     if (key == 'a') {
         // use it for testing
-        midiVoice.playNote();
+//        midiVoice.playNote();
 
     };
 }
@@ -428,24 +433,24 @@ void ofApp::mouseExited(int x, int y){
 void ofApp::windowResized(int w, int h){
     canvasCenter.set(w / 2, h / 2);
     
-    tombolaVertRecalc();
+    tombolaVertRecalc(0);
 
 }
 
 //--------------------------------------------------------------
-void ofApp::tombolaVertRecalc(){
+void ofApp::tombolaVertRecalc(float var){
     
     // again. finding this pretty gross, but I couldn't find any other method that worked.
     // Setting the vectors here, and then calling .setPosition(v0r) in update
     // also did not work, and I really dont know why. But time to move on...
     tRects.clear();
     
-    v0r.set(canvasCenter.x + v0.x - (v1.x / 2), canvasCenter.y + v0.y - (v1.y / 2));
-    v1r.set(canvasCenter.x + v1.x - (v2.x / 2), canvasCenter.y + v1.y - (v2.y / 2));
-    v2r.set(canvasCenter.x + v2.x - (v3.x / 2), canvasCenter.y + v2.y - (v3.y / 2));
-    v3r.set(canvasCenter.x + v3.x - (v4.x / 2), canvasCenter.y + v3.y - (v4.y / 2));
-    v4r.set(canvasCenter.x + v4.x - (v5.x / 2), canvasCenter.y + v4.y - (v5.y / 2));
-    v5r.set(canvasCenter.x + v5.x - (v0.x / 2), canvasCenter.y + v5.y - (v0.y / 2));
+    v0r.set(canvasCenter.x + v0.x - (v1.x / 2) + var, canvasCenter.y + v0.y - (v1.y / 2) + var);
+    v1r.set(canvasCenter.x + v1.x - (v2.x / 2) + var, canvasCenter.y + v1.y - (v2.y / 2) + var);
+    v2r.set(canvasCenter.x + v2.x - (v3.x / 2) + var, canvasCenter.y + v2.y - (v3.y / 2) + var);
+    v3r.set(canvasCenter.x + v3.x - (v4.x / 2) + var, canvasCenter.y + v3.y - (v4.y / 2) + var);
+    v4r.set(canvasCenter.x + v4.x - (v5.x / 2) + var, canvasCenter.y + v4.y - (v5.y / 2) + var);
+    v5r.set(canvasCenter.x + v5.x - (v0.x / 2) + var, canvasCenter.y + v5.y - (v0.y / 2) + var);
     
     auto rect0 = std::make_shared<ofxBox2dRect>();
     auto rect1 = std::make_shared<ofxBox2dRect>();
@@ -470,6 +475,46 @@ void ofApp::tombolaVertRecalc(){
     tRects.push_back(rect4);
     tRects.push_back(rect5);
 }
+//--------------------------------------------------------------
+void ofApp::tombolaScale(float radius){
+    tRects.clear();
+
+    v0.set(radius * cos(glm::radians(0.0)), radius * sin(glm::radians(0.0)), 0);
+    v1.set(radius * cos(glm::radians(60.0)), radius * sin(glm::radians(60.0)), 0);
+    v2.set(radius * cos(glm::radians(120.0)), radius * sin(glm::radians(120.0)), 0);
+    v3.set(radius * cos(glm::radians(180.0)), radius * sin(glm::radians(180.0)), 0);
+    v4.set(radius * cos(glm::radians(240.0)), radius * sin(glm::radians(240.0)), 0);
+    v5.set(radius * cos(glm::radians(300.0)), radius * sin(glm::radians(300.0)), 0);
+    
+    v0r.set(canvasCenter.x + v0.x - (v1.x / 2), canvasCenter.y + v0.y - (v1.y / 2));
+    v1r.set(canvasCenter.x + v1.x - (v2.x / 2), canvasCenter.y + v1.y - (v2.y / 2));
+    v2r.set(canvasCenter.x + v2.x - (v3.x / 2), canvasCenter.y + v2.y - (v3.y / 2));
+    v3r.set(canvasCenter.x + v3.x - (v4.x / 2), canvasCenter.y + v3.y - (v4.y / 2));
+    v4r.set(canvasCenter.x + v4.x - (v5.x / 2), canvasCenter.y + v4.y - (v5.y / 2));
+    v5r.set(canvasCenter.x + v5.x - (v0.x / 2), canvasCenter.y + v5.y - (v0.y / 2));
+    
+    auto rect0 = std::make_shared<ofxBox2dRect>();
+    auto rect1 = std::make_shared<ofxBox2dRect>();
+    auto rect2 = std::make_shared<ofxBox2dRect>();
+    auto rect3 = std::make_shared<ofxBox2dRect>();
+    auto rect4 = std::make_shared<ofxBox2dRect>();
+    auto rect5 = std::make_shared<ofxBox2dRect>();
+
+    rect0->setup(box2d.getWorld(), v0r.x, v0r.y, 200, 2, 60);
+    rect1->setup(box2d.getWorld(), v1r.x, v1r.y, 200, 2, 120);
+    rect2->setup(box2d.getWorld(), v2r.x, v2r.y, 200, 2, 0);
+    rect3->setup(box2d.getWorld(), v3r.x, v3r.y, 200, 2, -120);
+    rect4->setup(box2d.getWorld(), v4r.x, v4r.y, 200, 2, -60);
+    rect5->setup(box2d.getWorld(), v5r.x, v5r.y, 200, 2, 0);
+
+    tRects.push_back(rect1);
+    tRects.push_back(rect0);
+    tRects.push_back(rect2);
+    tRects.push_back(rect3);
+    tRects.push_back(rect4);
+    tRects.push_back(rect5);
+}
+
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){

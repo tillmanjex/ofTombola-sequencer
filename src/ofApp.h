@@ -29,8 +29,8 @@ class ofApp : public ofBaseApp{
     
         void tombolaInit();
         void tombolaRotate(float rotAngle);
-        void tombolaScale(float scale);
-        void tombolaVertRecalc();
+        void tombolaScale(float radius);
+        void tombolaVertRecalc(float var);
     
     
     float radius{};
