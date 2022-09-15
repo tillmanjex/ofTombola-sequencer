@@ -30,6 +30,7 @@ class ofApp : public ofBaseApp{
         void tombolaInit();
         void tombolaRotate(float rotAngle);
         void tombolaScale(float scale);
+        void tombolaVertRecalc();
     
     
     float radius{};
@@ -58,9 +59,13 @@ class ofApp : public ofBaseApp{
     void contactEnd(ofxBox2dContactArgs &e);
     
     // Tombola
-    ofVec3f v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11;
+    ofVec3f v0, v1, v2, v3, v4, v5;
+    ofVec3f v0r, v1r, v2r, v3r, v4r, v5r;
     ofVec2f canvasCenter;
     vector <shared_ptr<ofxBox2dEdge>> tEdges;
+    vector <shared_ptr<ofxBox2dRect>> tRects;
+    
+    
     
     ofPolyline tLine0;
     ofPolyline tLine1;

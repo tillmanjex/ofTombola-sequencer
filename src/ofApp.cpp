@@ -26,20 +26,24 @@ void ofApp::setup(){
     ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -5, 5);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    ofxDatGuiLabel* midiOut = gui->addLabel("Midi Out Select (Below)");
-
+    gui->addBreak();
+    
+//    ofxDatGuiButton* getPorts = gui->addButton("Get Midi Out Ports");
+//    gui->onButtonEvent(this, &ofApp::onButtonEvent);
+    
     // make as many buttons to open ports as there are ports available.
     // datGui dropdown box had impossible bugs for me to fix.
     // This was the only good alternate option.
     for (int i = 0; i < outPorts.size(); i++) {
         // outPorts.push_back(midiOut.getOutPortList()[i]);
-        gui->addButton(outPorts[i]);
+        gui->addButton("out: " + outPorts[i]);
         gui->onButtonEvent(this, &ofApp::onButtonEvent);
     };
     
     // ofxBox2d fps/gravity x,y)
     box2d.init(60.0, 0, 10);
     box2d.enableEvents();
+    box2d.createBounds(ofRectangle(0, 0, ofGetWindowWidth(), ofGetWindowHeight()));
 //    box2d.enableGrabbing() // maybe implement this later
     
     // register the contact listeners
@@ -64,9 +68,13 @@ void ofApp::exit() {
 void ofApp::update(){
     
     box2d.update();
-    gui->update();
     midiVoice.update(midi.getName(), 1, 0);
-
+    
+    
+    for (auto &rect : tRects){
+        rect->setPhysics(3.0, 0.5, 1.0);
+        rect->getWorld();
+    }
     
 
     
@@ -85,13 +93,24 @@ void ofApp::draw(){
     };
     
 
-    for (auto &edge : tEdges){
-        ofSetColor(255, 0, 80);
-        ofTranslate(canvasCenter.x, canvasCenter.y);
-        edge->setPosition(canvasCenter);
-        edge->draw();
-       
+//    for (auto &edge : tEdges){
+//        ofSetColor(255, 0, 80);
+//        ofPushMatrix();
+//        ofTranslate(canvasCenter.x, canvasCenter.y);
+//        edge->setPosition(canvasCenter);
+//        edge->draw();
+//        ofPopMatrix();
+//    };
+    
+    
+    for (auto &rect : tRects){
+        ofSetColor(0, 255, 80);
+        ofPushMatrix();
+        rect->draw();
+        ofPopMatrix();
     };
+
+    
 
     
 
@@ -115,6 +134,19 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         
         circles.push_back(circle);
     };
+    
+    // come back to this. I want to update the current buttons,
+//    if (e.target->is("Get Midi Out Ports")){
+//        for (int i = 0; i < outPorts.size(); i++) {
+//            if (gui->getButton(outPorts[i])->getLabel() == outPorts[i]){
+//                cout << "do nothing" << endl;
+//            } else
+//            if (gui->getButton(outPorts[i])->getLabel() != outPorts[i]){
+//                cout << "should add" << endl;
+//            gui->addButton(outPorts[i]);
+//            gui->onButtonEvent(this, &ofApp::onButtonEvent);
+//        };
+//    };
     
     // check against all port options if they were clicked
     // if so, then close other ports and open the clicked port
@@ -204,7 +236,7 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
         
         // Check what objects are colliding (it seems like a nonsensical
         // check, but without it I was getting pointer access errors...
-        if(e.a->GetType() == b2Shape::e_circle || e.a->GetType() == b2Shape::e_edge) {
+//        if(e.a->GetType() == b2Shape::e_circle || e.a->GetType() == b2Shape::e_polygon) {
             
             cout << "contact start" << endl;
             
@@ -228,7 +260,7 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
                 bData->update(midi.getName(), 1, 0);
                 bData->playNote();
                 cout << "bData" << endl;
-            }
+//            }
         }
     }
 }
@@ -261,6 +293,16 @@ void ofApp::tombolaInit(){
     v4.set(-100, -173, 0);
     v5.set(100, -173, 0);
     
+    // derive the central point between each pair of vectors above
+    // [v0 and v1], [v1 and v2] etc
+    v0r.set(canvasCenter.x + v0.x - (v1.x / 2), canvasCenter.y + v0.y - (v1.y / 2));
+    v1r.set(canvasCenter.x + v1.x - (v2.x / 2), canvasCenter.y + v1.y - (v2.y / 2));
+    v2r.set(canvasCenter.x + v2.x - (v3.x / 2), canvasCenter.y + v2.y - (v3.y / 2));
+    v3r.set(canvasCenter.x + v3.x - (v4.x / 2), canvasCenter.y + v3.y - (v4.y / 2));
+    v4r.set(canvasCenter.x + v4.x - (v5.x / 2), canvasCenter.y + v4.y - (v5.y / 2));
+    v5r.set(canvasCenter.x + v5.x - (v0.x / 2), canvasCenter.y + v5.y - (v0.y / 2));
+    
+    
     // Creating polylines for use in ofxBoxEdges
     // Could probably also do this in a vector, but got confused by how a vector of polylines works
     // (using the ofVec3s here instead of calculating inside incase I need easy access to them as variables...)
@@ -282,7 +324,34 @@ void ofApp::tombolaInit(){
     tLine5.addVertex(v5);
     tLine5.addVertex(v0);
 
-    // Creating edges
+    // this feels stupid, not sure if it's the best way.
+    // But as each rect needs a differnt initial position and rotation value
+    // I'm not sure how else to go about it.
+    auto rect0 = std::make_shared<ofxBox2dRect>();
+    auto rect1 = std::make_shared<ofxBox2dRect>();
+    auto rect2 = std::make_shared<ofxBox2dRect>();
+    auto rect3 = std::make_shared<ofxBox2dRect>();
+    auto rect4 = std::make_shared<ofxBox2dRect>();
+    auto rect5 = std::make_shared<ofxBox2dRect>();
+    
+    
+    rect0->setup(box2d.getWorld(), v0r.x, v0r.y, 200, 2, 60);
+    rect1->setup(box2d.getWorld(), v1r.x, v1r.y, 200, 2, 120);
+    rect2->setup(box2d.getWorld(), v2r.x, v2r.y, 200, 2, 0);
+    rect3->setup(box2d.getWorld(), v3r.x, v3r.y, 200, 2, -120);
+    rect4->setup(box2d.getWorld(), v4r.x, v4r.y, 200, 2, -60);
+    rect5->setup(box2d.getWorld(), v5r.x, v5r.y, 200, 2, 0);
+
+    
+    tRects.push_back(rect1);
+    tRects.push_back(rect0);
+    tRects.push_back(rect2);
+    tRects.push_back(rect3);
+    tRects.push_back(rect4);
+    tRects.push_back(rect5);
+
+    
+    // Creating edges from polylines
     auto edge = std::make_shared<ofxBox2dEdge>();
     edge->addVertexes(tLine0);
     edge->addVertexes(tLine1);
@@ -323,8 +392,21 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+
+    // make a shared circle
+    auto circle = std::make_shared<ofxBox2dCircle>();
+    circle->setPhysics(1, 0.7, 0.7);
+    circle->setup(box2d.getWorld(), ofGetMouseX(), ofGetMouseY(), 5);
+    circle->shouldRemoveOffScreen(circle);
     
+    // assign an instance of the MidiData class to the ball.
     
+    circle->setData(new MidiData());
+    auto * md = (MidiData*)circle->getData();
+    md->bHit = false;
+    
+    circles.push_back(circle);
+
 }
 
 //--------------------------------------------------------------
@@ -344,7 +426,49 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-   
+    canvasCenter.set(w / 2, h / 2);
+    
+    tombolaVertRecalc();
+
+}
+
+//--------------------------------------------------------------
+void ofApp::tombolaVertRecalc(){
+    
+    // again. finding this pretty gross, but I couldn't find any other method that worked.
+    // Setting the vectors here, and then calling .setPosition(v0r) in update
+    // also did not work, and I really dont know why. But time to move on...
+    tRects.clear();
+    
+    v0r.set(canvasCenter.x + v0.x - (v1.x / 2), canvasCenter.y + v0.y - (v1.y / 2));
+    v1r.set(canvasCenter.x + v1.x - (v2.x / 2), canvasCenter.y + v1.y - (v2.y / 2));
+    v2r.set(canvasCenter.x + v2.x - (v3.x / 2), canvasCenter.y + v2.y - (v3.y / 2));
+    v3r.set(canvasCenter.x + v3.x - (v4.x / 2), canvasCenter.y + v3.y - (v4.y / 2));
+    v4r.set(canvasCenter.x + v4.x - (v5.x / 2), canvasCenter.y + v4.y - (v5.y / 2));
+    v5r.set(canvasCenter.x + v5.x - (v0.x / 2), canvasCenter.y + v5.y - (v0.y / 2));
+    
+    auto rect0 = std::make_shared<ofxBox2dRect>();
+    auto rect1 = std::make_shared<ofxBox2dRect>();
+    auto rect2 = std::make_shared<ofxBox2dRect>();
+    auto rect3 = std::make_shared<ofxBox2dRect>();
+    auto rect4 = std::make_shared<ofxBox2dRect>();
+    auto rect5 = std::make_shared<ofxBox2dRect>();
+
+
+    rect0->setup(box2d.getWorld(), v0r.x, v0r.y, 200, 2, 60);
+    rect1->setup(box2d.getWorld(), v1r.x, v1r.y, 200, 2, 120);
+    rect2->setup(box2d.getWorld(), v2r.x, v2r.y, 200, 2, 0);
+    rect3->setup(box2d.getWorld(), v3r.x, v3r.y, 200, 2, -120);
+    rect4->setup(box2d.getWorld(), v4r.x, v4r.y, 200, 2, -60);
+    rect5->setup(box2d.getWorld(), v5r.x, v5r.y, 200, 2, 0);
+
+
+    tRects.push_back(rect1);
+    tRects.push_back(rect0);
+    tRects.push_back(rect2);
+    tRects.push_back(rect3);
+    tRects.push_back(rect4);
+    tRects.push_back(rect5);
 }
 
 //--------------------------------------------------------------
