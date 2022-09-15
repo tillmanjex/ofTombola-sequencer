@@ -7,6 +7,7 @@
 
 #include "ofxMidiData.hpp"
 
+
 MidiData::MidiData(){
 
     // scales
@@ -49,7 +50,7 @@ void MidiData::playNote(){
     
     velocity = int(ofRandom(30, 100));
     midiOut.sendNoteOn(channel, note, velocity);
-
+    std::cout << "playNote()" << endl;
 };
 
 

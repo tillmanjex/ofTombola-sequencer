@@ -108,6 +108,7 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         circle->shouldRemoveOffScreen(circle);
         
         // assign an instance of the MidiData class to the ball.
+        
         circle->setData(new MidiData());
         auto * md = (MidiData*)circle->getData();
         md->bHit = false;
@@ -201,36 +202,33 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
 void ofApp::contactStart(ofxBox2dContactArgs &e) {
     if(e.a != NULL && e.b != NULL) {
         
-        // if we collide with the ground we do not
-        // want to play a sound. this is how you do that
-        if(e.a->GetType() == b2Shape::e_circle || e.b->GetType() == b2Shape::e_circle) {
+        // Check what objects are colliding (it seems like a nonsensical
+        // check, but without it I was getting pointer access errors...
+        if(e.a->GetType() == b2Shape::e_circle || e.a->GetType() == b2Shape::e_edge) {
             
-//            midiVoice.playNote();
+            cout << "contact start" << endl;
             
-            
-            // trying the technique from example here
-            // seems like the class object gets paired with a variable
-            // it can is then assigned a pointer to the data, where it can
-            // then have acecss to the data stored in it from when it was created
+            // Dont fully understand what's happening here,
+            // but it seems like aData is being set as a pointer to MidiData
+            // and - as it now takes the class form - can subsequently use
+            // methods from that class as well as the contact listner class
             MidiData * aData = (MidiData*)e.a->GetBody()->GetUserData();
             MidiData * bData = (MidiData*)e.b->GetBody()->GetUserData();
-            
-            aData->update(midi.getName(), 1, 0);
-            
-//            cout << aData->getData() << endl;
-//            SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
-//            SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
-            
+
+
             if(aData) {
-                aData->bHit = true;
-                aData->playNote();
-                cout << "hjere" << endl;
+//                aData->bHit = true;
+                bData->update(midi.getName(), 1, 0);
+                bData->playNote();
+                cout << "aData" << endl;
             };
-//
-//            if(bData) {
+
+            if(bData) {
 //                bData->bHit = true;
-//                sound[bData->soundID].play();
-//            }
+                bData->update(midi.getName(), 1, 0);
+                bData->playNote();
+                cout << "bData" << endl;
+            }
         }
     }
 }
