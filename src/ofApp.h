@@ -29,8 +29,8 @@ class ofApp : public ofBaseApp{
     
         void tombolaInit();
         void tombolaRotate(float rotAngle);
-        void tombolaScale(float radius);
-        void tombolaVertRecalc(float var);
+        void tombolaScale(float radius, vector<shared_ptr<ofxBox2dRect>> tRectsPassed);
+        void tombolaCenter();
     
     
     float radius{};
@@ -64,6 +64,7 @@ class ofApp : public ofBaseApp{
     ofVec2f canvasCenter;
     vector <shared_ptr<ofxBox2dEdge>> tEdges;
     vector <shared_ptr<ofxBox2dRect>> tRects;
+    int tLength, tWidth;
     
     
     
