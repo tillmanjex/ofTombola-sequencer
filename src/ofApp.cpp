@@ -23,7 +23,7 @@ void ofApp::setup(){
     ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 100, 300);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", 0, 360);
+    ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -10, 10, 0);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
     gui->addBreak();
@@ -449,19 +449,6 @@ void ofApp::windowResized(int w, int h){
 //--------------------------------------------------------------
 void ofApp::tombolaCenter(){
     
-    // again. finding this pretty gross, but I couldn't find any other method that worked.
-    // Setting the vectors here, and then calling .setPosition(v0r) in update
-    // also did not work, and I really dont know why. But time to move on...
-//    tRects.clear();
-
-//    v0.set(radius * cos(glm::radians(0.0)), radius * sin(glm::radians(0.0)), 0);
-//    v1.set(radius * cos(glm::radians(60.0)), radius * sin(glm::radians(60.0)), 0);
-//    v2.set(radius * cos(glm::radians(120.0)), radius * sin(glm::radians(120.0)), 0);
-//    v3.set(radius * cos(glm::radians(180.0)), radius * sin(glm::radians(180.0)), 0);
-//    v4.set(radius * cos(glm::radians(240.0)), radius * sin(glm::radians(240.0)), 0);
-//    v5.set(radius * cos(glm::radians(300.0)), radius * sin(glm::radians(300.0)), 0);
-//
-    
     v0r.set(canvasCenter.x + v0.x - (v1.x / 2), canvasCenter.y + v0.y - (v1.y / 2));
     v1r.set(canvasCenter.x + v1.x - (v2.x / 2), canvasCenter.y + v1.y - (v2.y / 2));
     v2r.set(canvasCenter.x + v2.x - (v3.x / 2), canvasCenter.y + v2.y - (v3.y / 2));
@@ -480,15 +467,7 @@ void ofApp::tombolaCenter(){
 //--------------------------------------------------------------
 void ofApp::tombolaScale(float radius, vector<shared_ptr<ofxBox2dRect>> tRectsPassed){
     
-    
-//    tRects.clear();
-    
-//    auto rect0 = std::make_shared<ofxBox2dRect>();
-//    auto rect1 = std::make_shared<ofxBox2dRect>();
-//    auto rect2 = std::make_shared<ofxBox2dRect>();
-//    auto rect3 = std::make_shared<ofxBox2dRect>();
-//    auto rect4 = std::make_shared<ofxBox2dRect>();
-//    auto rect5 = std::make_shared<ofxBox2dRect>();
+
 
     v0.set(radius * cos(glm::radians(0.0)), radius * sin(glm::radians(0.0)), 0);
     v1.set(radius * cos(glm::radians(60.0)), radius * sin(glm::radians(60.0)), 0);
@@ -504,10 +483,6 @@ void ofApp::tombolaScale(float radius, vector<shared_ptr<ofxBox2dRect>> tRectsPa
     v4r.set(canvasCenter.x + v4.x - (v5.x / 2), canvasCenter.y + v4.y - (v5.y / 2));
     v5r.set(canvasCenter.x + v5.x - (v0.x / 2), canvasCenter.y + v5.y - (v0.y / 2));
     
-    // perhaps a bug? The first alteration to serPosition after program init
-    // rotated tRect0 and 1 for some reason... Uncomment the two lines below, run the app
-    // and resize the window as your first action.
-
     tRects.at(0)->setPosition(v0r);
     tRects.at(1)->setPosition(v1r);
     tRects.at(2)->setPosition(v2r);
@@ -515,52 +490,18 @@ void ofApp::tombolaScale(float radius, vector<shared_ptr<ofxBox2dRect>> tRectsPa
     tRects.at(4)->setPosition(v4r);
     tRects.at(5)->setPosition(v5r);
     
-//    rect0->setup(box2d.getWorld(), v0r.x, v0r.y, tLength, tWidth, 60);
-//    rect1->setup(box2d.getWorld(), v1r.x, v1r.y, tLength, tWidth, 120);
-//    rect2->setup(box2d.getWorld(), v2r.x, v2r.y, tLength, tWidth, 0);
-//    rect3->setup(box2d.getWorld(), v3r.x, v3r.y, tLength, tWidth, -120);
-//    rect4->setup(box2d.getWorld(), v4r.x, v4r.y, tLength, tWidth, -60);
-//    rect5->setup(box2d.getWorld(), v5r.x, v5r.y, tLength, tWidth, 0);
-    
-//    tRects.push_back(rect0);
-//    tRects.push_back(rect1);
-//    tRects.push_back(rect2);
-//    tRects.push_back(rect3);
-//    tRects.push_back(rect4);
-//    tRects.push_back(rect5);
 }
 
 //--------------------------------------------------------------
 void ofApp::tombolaRotate(float rotAngle){
-    tRects.clear();
-    
-    auto rect0 = std::make_shared<ofxBox2dRect>();
-    auto rect1 = std::make_shared<ofxBox2dRect>();
-    auto rect2 = std::make_shared<ofxBox2dRect>();
-    auto rect3 = std::make_shared<ofxBox2dRect>();
-    auto rect4 = std::make_shared<ofxBox2dRect>();
-    auto rect5 = std::make_shared<ofxBox2dRect>();
 
-    rect0->setup(box2d.getWorld(), v0r.x, v0r.y, 200, 2, 60);
-    rect1->setup(box2d.getWorld(), v1r.x, v1r.y, 200, 2, 120);
-    rect2->setup(box2d.getWorld(), v2r.x, v2r.y, 200, 2, 0);
-    rect3->setup(box2d.getWorld(), v3r.x, v3r.y, 200, 2, -120);
-    rect4->setup(box2d.getWorld(), v4r.x, v4r.y, 200, 2, -60);
-    rect5->setup(box2d.getWorld(), v5r.x, v5r.y, 200, 2, 0);
-
-    rect0->setRotation(rect0->getRotation()+rotAngle);
-    rect1->setRotation(rect1->getRotation()+rotAngle);
-    rect2->setRotation(rect2->getRotation()+rotAngle);
-    rect3->setRotation(rect3->getRotation()+rotAngle);
-    rect4->setRotation(rect4->getRotation()+rotAngle);
-    rect5->setRotation(rect5->getRotation()+rotAngle);
     
-    tRects.push_back(rect0);
-    tRects.push_back(rect1);
-    tRects.push_back(rect2);
-    tRects.push_back(rect3);
-    tRects.push_back(rect4);
-    tRects.push_back(rect5);
+    tRects.at(0)->setRotation(tRects.at(0)->getRotation() + rotAngle);
+    tRects.at(1)->setRotation(tRects.at(1)->getRotation() + rotAngle);
+    tRects.at(2)->setRotation(tRects.at(2)->getRotation() + rotAngle);
+    tRects.at(3)->setRotation(tRects.at(3)->getRotation() + rotAngle);
+    tRects.at(4)->setRotation(tRects.at(4)->getRotation() + rotAngle);
+    tRects.at(5)->setRotation(tRects.at(5)->getRotation() + rotAngle);
 }
 
 //--------------------------------------------------------------
