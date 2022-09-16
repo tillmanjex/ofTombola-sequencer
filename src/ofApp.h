@@ -34,7 +34,7 @@ class ofApp : public ofBaseApp{
         void tombolaCenter();
     
 
-    
+    int tSpinSpeed, modulo360;
 
     // ofxMidi
     ofxMidiOut midi;
@@ -61,7 +61,10 @@ class ofApp : public ofBaseApp{
     // Tombola
     ofVec3f v0, v1, v2, v3, v4, v5;
     ofVec3f v0r, v1r, v2r, v3r, v4r, v5r, canvasCenter;
-    ofQuaternion quant;
+//    ofQuaternion quant;
+//    ofQuaternion quantNew;
+    
+    
     vector <shared_ptr<ofxBox2dEdge>> tEdges;
     vector <shared_ptr<ofxBox2dRect>> tRects;
     int tLength, tWidth;

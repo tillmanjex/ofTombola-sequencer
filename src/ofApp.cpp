@@ -32,7 +32,7 @@ void ofApp::setup(){
     ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 150, 300, 100);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -4, 4, 0);
+    ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -180, 180, 0);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
     ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -50, 50);
@@ -192,7 +192,7 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
         
     } else if (e.target->is("Tombola Rotate")){
         tRotAngle = e.value;
-        tombolaRotate();
+//        tombolaRotate();
         
     } else if (e.target->is("Tombola Spin")){
         tSpin = e.value;
@@ -423,12 +423,12 @@ void ofApp::tombolaScale(){
 void ofApp::tombolaRotate(){
 
     // tRotAngle set by slider
-    tRects.at(0)->setRotation(tRotAngle + tRects.at(0)->getRotation());
-    tRects.at(1)->setRotation(tRotAngle + tRects.at(1)->getRotation());
-    tRects.at(2)->setRotation(tRotAngle + tRects.at(2)->getRotation());
-    tRects.at(3)->setRotation(tRotAngle + tRects.at(3)->getRotation());
-    tRects.at(4)->setRotation(tRotAngle + tRects.at(4)->getRotation());
-    tRects.at(5)->setRotation(tRotAngle + tRects.at(5)->getRotation());
+    tRects.at(0)->setRotation(60 + tRotAngle);
+    tRects.at(1)->setRotation(120 + tRotAngle);
+    tRects.at(2)->setRotation(tRotAngle);
+    tRects.at(3)->setRotation(-120 + tRotAngle);
+    tRects.at(4)->setRotation(-60 + tRotAngle);
+    tRects.at(5)->setRotation(tRotAngle);
     
 }
 
@@ -449,16 +449,17 @@ void ofApp::tombolaSpin(){
     v4r.set(canvasCenter.x + v4.x - (v5.x / 2), canvasCenter.y + v4.y - (v5.y / 2));
     v5r.set(canvasCenter.x + v5.x - (v0.x / 2), canvasCenter.y + v5.y - (v0.y / 2));
     
-    quant.makeRotate(v0r, v3r);
-    quant.getEuler().z;
-    cout << quant.getEuler().z << endl;
+
     
-    tRects.at(0)->setRotation(quant.getEuler().z);
-    tRects.at(1)->setRotation(120);
-    tRects.at(2)->setRotation(0);
-    tRects.at(3)->setRotation(-120);
-    tRects.at(4)->setRotation(-60);
-    tRects.at(5)->setRotation(0);
+    tSpinSpeed = tSpin * ofGetElapsedTimef();
+    modulo360 = 360;
+
+    tRects.at(0)->setRotation(60 + tRotAngle + tSpinSpeed % modulo360);
+    tRects.at(1)->setRotation(120 + tRotAngle + tSpinSpeed % modulo360);
+    tRects.at(2)->setRotation(tRotAngle + tSpinSpeed % modulo360);
+    tRects.at(3)->setRotation(-120 + tRotAngle + tSpinSpeed % modulo360);
+    tRects.at(4)->setRotation(-60 + tRotAngle + tSpinSpeed % modulo360);
+    tRects.at(5)->setRotation(tRotAngle + tSpinSpeed % modulo360);
 
     tRects.at(0)->setPosition(v0r);
     tRects.at(1)->setPosition(v1r);
