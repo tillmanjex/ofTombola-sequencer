@@ -22,7 +22,8 @@ public:
      ~MidiData();
     
     void update(std::string port, int channel, int scaleSelect);
-    void playNote();
+    void noteOn();
+    void noteOff();
     
     ofxMidiOut midiOut;
     int channel;

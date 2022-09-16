@@ -46,12 +46,17 @@ void MidiData::update(std::string port, int channel, int scaleSelect){
     }
 };
 
-void MidiData::playNote(){
+void MidiData::noteOn(){
     
     velocity = int(ofRandom(30, 100));
     midiOut.sendNoteOn(channel, note, velocity);
-    std::cout << "playNote()" << endl;
+    std::cout << "note on" << endl;
 };
+
+void MidiData::noteOff(){
+    midiOut.sendNoteOff(channel, note);
+    std::cout << "note off" << endl;
+}
 
 
                             

@@ -29,13 +29,13 @@ void ofApp::setup(){
     ofxDatGuiButton* ballClear = gui->addButton("Clear Balls");
     gui->onButtonEvent(this, &ofApp::onButtonEvent);
     
-    ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 100, 300);
+    ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 150, 300, 100);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
     ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -4, 4, 0);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -10, 10);
+    ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -500, 500);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
 
@@ -50,7 +50,7 @@ void ofApp::setup(){
     // This was the only good alternate option.
     for (int i = 0; i < outPorts.size(); i++) {
         // outPorts.push_back(midiOut.getOutPortList()[i]);
-        gui->addButton("out: " + outPorts[i]);
+        gui->addButton(outPorts[i]);
         gui->onButtonEvent(this, &ofApp::onButtonEvent);
     };
     
@@ -59,8 +59,8 @@ void ofApp::setup(){
     box2d.enableEvents();
 //    box2d.enableGrabbing() // maybe implement this later
     
-    tRadius = 200;
-    tLength = 200;
+    tRadius = 150;
+    tLength = 150;
     tWidth = 2;
     
     bBounce = 0.7;
@@ -91,6 +91,7 @@ void ofApp::update(){
     midiVoice.update(midi.getName(), 1, 0);
     
     tombolaScale();
+    tombolaRotate();
 
   //  Not working yet
 //    tombolaSpin();
@@ -121,9 +122,7 @@ void ofApp::draw(){
     
     for (auto &rect : tRects){
         ofSetColor(200, 0, 80);
-        ofPushMatrix();
         rect->draw();
-        ofPopMatrix();
     };
 
     
@@ -139,7 +138,6 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         // make a shared circle
         auto circle = std::make_shared<ofxBox2dCircle>();
         circle->setPhysics(bDensity, bBounce, 0.7);
-//        circle->addForce(ofVec2f(ofRandom(-1.0, 20.0), ofRandom(-1.0, 20.0)), 50);
         circle->setup(box2d.getWorld(), canvasCenter.x, canvasCenter.y, 5);
         circle->shouldRemoveOffScreen(circle);
         
@@ -194,10 +192,29 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
         
     } else if (e.target->is("Tombola Rotate")){
         tRotAngle = e.value;
-        tombolaRotate();
+        
         
     } else if (e.target->is("Tombola Spin")){
-        tSpin = e.value;
+//        tSpin = e.value;
+//        tombolaSpin();
+        cout << e.value << endl;
+        //        v0r.rotate(e.value, ofVec3f(0, 0, 1));
+//        v1r.rotate(e.value, ofVec3f(0, 0, 1));
+//        v2r.rotate(e.value, ofVec3f(0, 0, 1));
+//        v3r.rotate(e.value, ofVec3f(0, 0, 1));
+//        v4r.rotate(e.value, ofVec3f(0, 0, 1));
+//        v5r.rotate(e.value, ofVec3f(0, 0, 1));
+//
+        tRects.at(0)->setPosition(ofVec2f(e.value, e.value));
+//        tRects.at(1)->setPosition(v1r - tRects.at(1)->getPosition());
+//        tRects.at(2)->setPosition(v2r - tRects.at(2)->getPosition());
+//        tRects.at(3)->setPosition(v3r - tRects.at(3)->getPosition());
+//        tRects.at(4)->setPosition(v4r - tRects.at(4)->getPosition());
+//        tRects.at(5)->setPosition(v5r - tRects.at(5)->getPosition());
+//
+//        for (auto &tRect : tRects){
+//            tRect->setPosition(ofVec2f(e.value, e.value));
+//        }
         
     } else if (e.target->is("Bounciness")){
         bBounce = e.value;
@@ -220,7 +237,7 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
         
         // Check what objects are colliding (it seems like a nonsensical
         // check, but without it I was getting pointer access errors...
-//        if(e.a->GetType() == b2Shape::e_circle || e.a->GetType() == b2Shape::e_polygon) {
+//        if(e.a->GetType() == b2Shape::e_circle || e.a->GetType() == b2Shape::e_edge) {
             
             cout << "contact start" << endl;
             
@@ -233,19 +250,21 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
 
 
             if(aData) {
-//                aData->bHit = true;
+                aData->bHit = true;
                 bData->update(midi.getName(), 1, 0);
-                bData->playNote();
-
+                bData->noteOn();
+                cout << "aData collision" << endl;
             };
 
             if(bData) {
-//                bData->bHit = true;
+                bData->bHit = true;
                 bData->update(midi.getName(), 1, 0);
-                bData->playNote();
-                cout << bData->bHit << endl;
+                bData->noteOn();
+                cout << "bData collision" << endl;
+            }
             
-        }
+        
+        
     }
 }
 
@@ -257,13 +276,13 @@ void ofApp::contactEnd(ofxBox2dContactArgs &e) {
         MidiData * bData = (MidiData*)e.b->GetBody()->GetUserData();
 
         if(aData) {
-//            aData->bHit = false;
-            
+            aData->bHit = false;
+            aData->noteOff();
         }
 
         if(bData) {
-//            bData->bHit = false;
-            cout << bData->bHit << endl;
+            bData->bHit = false;
+            bData->noteOff();
         }
     }
 }
@@ -299,19 +318,13 @@ void ofApp::tombolaInit(){
     auto rect5 = std::make_shared<ofxBox2dRect>();
     
     
-    rect0->setup(box2d.getWorld(), v0r.x, v0r.y, 200, 2, 60);
-    rect1->setup(box2d.getWorld(), v1r.x, v1r.y, 200, 2, 120);
-    rect2->setup(box2d.getWorld(), v2r.x, v2r.y, 200, 2, 0);
-    rect3->setup(box2d.getWorld(), v3r.x, v3r.y, 200, 2, -120);
-    rect4->setup(box2d.getWorld(), v4r.x, v4r.y, 200, 2, -60);
-    rect5->setup(box2d.getWorld(), v5r.x, v5r.y, 200, 2, 0);
+    rect0->setup(box2d.getWorld(), v0r.x, v0r.y, tLength, tWidth, 60);
+    rect1->setup(box2d.getWorld(), v1r.x, v1r.y, tLength, tWidth, 120);
+    rect2->setup(box2d.getWorld(), v2r.x, v2r.y, tLength, tWidth, 0);
+    rect3->setup(box2d.getWorld(), v3r.x, v3r.y, tLength, tWidth, -120);
+    rect4->setup(box2d.getWorld(), v4r.x, v4r.y, tLength, tWidth, -60);
+    rect5->setup(box2d.getWorld(), v5r.x, v5r.y, tLength, tWidth, 0);
     
-    rect0->setRotation(60);
-    rect1->setRotation(120);
-    rect2->setRotation(0);
-    rect3->setRotation(-120);
-    rect4->setRotation(-60);
-    rect5->setRotation(0);
 
     tRects.push_back(rect0);
     tRects.push_back(rect1);
@@ -328,7 +341,7 @@ void ofApp::tombolaInit(){
 void ofApp::keyPressed(int key){
     if (key == 'a') {
         // use it for testing
-//        midiVoice.playNote();
+        
 
     };
 }
@@ -428,24 +441,34 @@ void ofApp::tombolaScale(){
 void ofApp::tombolaRotate(){
 
     // tRotAngle set by slider
-    tRects.at(0)->setRotation(tRects.at(0)->getRotation() + tRotAngle);
-    tRects.at(1)->setRotation(tRects.at(1)->getRotation() + tRotAngle);
-    tRects.at(2)->setRotation(tRects.at(2)->getRotation() + tRotAngle);
-    tRects.at(3)->setRotation(tRects.at(3)->getRotation() + tRotAngle);
-    tRects.at(4)->setRotation(tRects.at(4)->getRotation() + tRotAngle);
-    tRects.at(5)->setRotation(tRects.at(5)->getRotation() + tRotAngle);
+    tRects.at(0)->setRotation(tRotAngle + tRects.at(0)->getRotation());
+    tRects.at(1)->setRotation(tRotAngle + tRects.at(1)->getRotation());
+    tRects.at(2)->setRotation(tRotAngle + tRects.at(2)->getRotation());
+    tRects.at(3)->setRotation(tRotAngle + tRects.at(3)->getRotation());
+    tRects.at(4)->setRotation(tRotAngle + tRects.at(4)->getRotation());
+    tRects.at(5)->setRotation(tRotAngle + tRects.at(5)->getRotation());
 }
 
 //--------------------------------------------------------------
 void ofApp::tombolaSpin(){
     // tRotAngle set by slider
-
-    tRects.at(0)->setPosition(tRects.at(0)->getPosition() += (tRadius * cos(glm::radians(tRects.at(0)->getRotation() + tSpin)), tRadius * sin(glm::radians(tRects.at(0)->getRotation() + tSpin)), 0));
-    tRects.at(1)->setPosition(tRects.at(1)->getPosition() + tRotAngle);
-    tRects.at(2)->setPosition(tRects.at(2)->getPosition() + tRotAngle);
-    tRects.at(3)->setPosition(tRects.at(3)->getPosition() + tRotAngle);
-    tRects.at(4)->setPosition(tRects.at(4)->getPosition() + tRotAngle);
-    tRects.at(5)->setPosition(tRects.at(5)->getPosition() + tRotAngle);
+    v0r.rotate(tSpin, ofVec3f(0, 1, 0));
+    cout << v0r << endl;
+    
+    tRects.at(0)->setPosition(v0r - tRects.at(0)->getPosition());
+    tRects.at(1)->setPosition(v1r - tRects.at(1)->getPosition());
+    tRects.at(2)->setPosition(v2r - tRects.at(2)->getPosition());
+    tRects.at(3)->setPosition(v3r - tRects.at(3)->getPosition());
+    tRects.at(4)->setPosition(v4r - tRects.at(4)->getPosition());
+    tRects.at(5)->setPosition(v5r - tRects.at(5)->getPosition());
+    
+    
+//    tRects.at(0)->setPosition(tRects.at(0)->getPosition() += (tRadius * cos(glm::radians(tRects.at(0)->getRotation() + tSpin)), tRadius * sin(glm::radians(tRects.at(0)->getRotation() + tSpin)), 0));
+//    tRects.at(1)->setPosition(tRects.at(1)->getPosition() + tRotAngle);
+//    tRects.at(2)->setPosition(tRects.at(2)->getPosition() + tRotAngle);
+//    tRects.at(3)->setPosition(tRects.at(3)->getPosition() + tRotAngle);
+//    tRects.at(4)->setPosition(tRects.at(4)->getPosition() + tRotAngle);
+//    tRects.at(5)->setPosition(tRects.at(5)->getPosition() + tRotAngle);
 }
 
 //--------------------------------------------------------------
