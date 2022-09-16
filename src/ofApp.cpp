@@ -35,7 +35,7 @@ void ofApp::setup(){
     ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -4, 4, 0);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -500, 500);
+    ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -50, 50);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
 
@@ -90,11 +90,10 @@ void ofApp::update(){
     box2d.update();
     midiVoice.update(midi.getName(), 1, 0);
     
+    
     tombolaScale();
-    tombolaRotate();
+    tombolaSpin();
 
-  //  Not working yet
-//    tombolaSpin();
 
     
     for (auto &rect : tRects){
@@ -190,31 +189,14 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
     if (e.target->is("Tombola Size")){
         tRadius = e.value;
         
+        
     } else if (e.target->is("Tombola Rotate")){
         tRotAngle = e.value;
-        
+        tombolaRotate();
         
     } else if (e.target->is("Tombola Spin")){
-//        tSpin = e.value;
-//        tombolaSpin();
-        cout << e.value << endl;
-        //        v0r.rotate(e.value, ofVec3f(0, 0, 1));
-//        v1r.rotate(e.value, ofVec3f(0, 0, 1));
-//        v2r.rotate(e.value, ofVec3f(0, 0, 1));
-//        v3r.rotate(e.value, ofVec3f(0, 0, 1));
-//        v4r.rotate(e.value, ofVec3f(0, 0, 1));
-//        v5r.rotate(e.value, ofVec3f(0, 0, 1));
-//
-        tRects.at(0)->setPosition(ofVec2f(e.value, e.value));
-//        tRects.at(1)->setPosition(v1r - tRects.at(1)->getPosition());
-//        tRects.at(2)->setPosition(v2r - tRects.at(2)->getPosition());
-//        tRects.at(3)->setPosition(v3r - tRects.at(3)->getPosition());
-//        tRects.at(4)->setPosition(v4r - tRects.at(4)->getPosition());
-//        tRects.at(5)->setPosition(v5r - tRects.at(5)->getPosition());
-//
-//        for (auto &tRect : tRects){
-//            tRect->setPosition(ofVec2f(e.value, e.value));
-//        }
+        tSpin = e.value;
+        // tombolaSpin() doesn't go here because it needs updating relative to framerate/time
         
     } else if (e.target->is("Bounciness")){
         bBounce = e.value;
@@ -447,28 +429,45 @@ void ofApp::tombolaRotate(){
     tRects.at(3)->setRotation(tRotAngle + tRects.at(3)->getRotation());
     tRects.at(4)->setRotation(tRotAngle + tRects.at(4)->getRotation());
     tRects.at(5)->setRotation(tRotAngle + tRects.at(5)->getRotation());
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::tombolaSpin(){
-    // tRotAngle set by slider
-    v0r.rotate(tSpin, ofVec3f(0, 1, 0));
-    cout << v0r << endl;
+    // tSpin set by slider
+    v0.rotate(tSpin * ofGetElapsedTimef(), ofVec3f(0, 0, 1));
+    v1.rotate(tSpin * ofGetElapsedTimef(), ofVec3f(0, 0, 1));
+    v2.rotate(tSpin * ofGetElapsedTimef(), ofVec3f(0, 0, 1));
+    v3.rotate(tSpin * ofGetElapsedTimef(), ofVec3f(0, 0, 1));
+    v4.rotate(tSpin * ofGetElapsedTimef(), ofVec3f(0, 0, 1));
+    v5.rotate(tSpin * ofGetElapsedTimef(), ofVec3f(0, 0, 1));
     
-    tRects.at(0)->setPosition(v0r - tRects.at(0)->getPosition());
-    tRects.at(1)->setPosition(v1r - tRects.at(1)->getPosition());
-    tRects.at(2)->setPosition(v2r - tRects.at(2)->getPosition());
-    tRects.at(3)->setPosition(v3r - tRects.at(3)->getPosition());
-    tRects.at(4)->setPosition(v4r - tRects.at(4)->getPosition());
-    tRects.at(5)->setPosition(v5r - tRects.at(5)->getPosition());
+    v0r.set(canvasCenter.x + v0.x - (v1.x / 2), canvasCenter.y + v0.y - (v1.y / 2));
+    v1r.set(canvasCenter.x + v1.x - (v2.x / 2), canvasCenter.y + v1.y - (v2.y / 2));
+    v2r.set(canvasCenter.x + v2.x - (v3.x / 2), canvasCenter.y + v2.y - (v3.y / 2));
+    v3r.set(canvasCenter.x + v3.x - (v4.x / 2), canvasCenter.y + v3.y - (v4.y / 2));
+    v4r.set(canvasCenter.x + v4.x - (v5.x / 2), canvasCenter.y + v4.y - (v5.y / 2));
+    v5r.set(canvasCenter.x + v5.x - (v0.x / 2), canvasCenter.y + v5.y - (v0.y / 2));
     
+    quant.makeRotate(v0r, v3r);
+    quant.getEuler().z;
+    cout << quant.getEuler().z << endl;
     
-//    tRects.at(0)->setPosition(tRects.at(0)->getPosition() += (tRadius * cos(glm::radians(tRects.at(0)->getRotation() + tSpin)), tRadius * sin(glm::radians(tRects.at(0)->getRotation() + tSpin)), 0));
-//    tRects.at(1)->setPosition(tRects.at(1)->getPosition() + tRotAngle);
-//    tRects.at(2)->setPosition(tRects.at(2)->getPosition() + tRotAngle);
-//    tRects.at(3)->setPosition(tRects.at(3)->getPosition() + tRotAngle);
-//    tRects.at(4)->setPosition(tRects.at(4)->getPosition() + tRotAngle);
-//    tRects.at(5)->setPosition(tRects.at(5)->getPosition() + tRotAngle);
+    tRects.at(0)->setRotation(quant.getEuler().z);
+    tRects.at(1)->setRotation(120);
+    tRects.at(2)->setRotation(0);
+    tRects.at(3)->setRotation(-120);
+    tRects.at(4)->setRotation(-60);
+    tRects.at(5)->setRotation(0);
+
+    tRects.at(0)->setPosition(v0r);
+    tRects.at(1)->setPosition(v1r);
+    tRects.at(2)->setPosition(v2r);
+    tRects.at(3)->setPosition(v3r);
+    tRects.at(4)->setPosition(v4r);
+    tRects.at(5)->setPosition(v5r);
+    
+
 }
 
 //--------------------------------------------------------------
