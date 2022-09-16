@@ -23,7 +23,7 @@ void ofApp::setup(){
     ofxDatGuiSlider* ballMass = gui->addSlider("Ball Mass", 1.0, 100);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    ofxDatGuiSlider* ballBounce = gui->addSlider("Bounciness", 0.0, 5.0);
+    ofxDatGuiSlider* ballBounce = gui->addSlider("Bounciness", 0.0, 2.0);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
     ofxDatGuiButton* ballClear = gui->addButton("Clear Balls");
@@ -35,8 +35,8 @@ void ofApp::setup(){
     ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -4, 4, 0);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-//    ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -10, 10);
-//    gui->onSliderEvent(this, &ofApp::onSliderEvent);
+    ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -10, 10);
+    gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
 
     
@@ -91,7 +91,7 @@ void ofApp::update(){
     midiVoice.update(midi.getName(), 1, 0);
     
     tombolaScale();
-    tombolaRotate();
+
   //  Not working yet
 //    tombolaSpin();
 
@@ -187,27 +187,30 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
 
 //--------------------------------------------------------------
 void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
-    
-    for (auto & circle : circles){
-    if (e.target->is("Bounciness")){
-        bBounce = e.value;
-    } else if (e.target->is("Ball Mass")){
-        bDensity = e.value;
-
-    }
+   
     
     if (e.target->is("Tombola Size")){
         tRadius = e.value;
         
     } else if (e.target->is("Tombola Rotate")){
         tRotAngle = e.value;
-
+        tombolaRotate();
+        
     } else if (e.target->is("Tombola Spin")){
         tSpin = e.value;
-    };
-    
-    
+        
+    } else if (e.target->is("Bounciness")){
+        bBounce = e.value;
+        
+    } else if (e.target->is("Ball Mass")){
+        bDensity = e.value;
+
     }
+    
+
+    
+    
+    
     
 }
 
@@ -230,14 +233,14 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
 
 
             if(aData) {
-                aData->bHit = true;
+//                aData->bHit = true;
                 bData->update(midi.getName(), 1, 0);
                 bData->playNote();
 
             };
 
             if(bData) {
-                bData->bHit = true;
+//                bData->bHit = true;
                 bData->update(midi.getName(), 1, 0);
                 bData->playNote();
                 cout << bData->bHit << endl;
@@ -254,12 +257,12 @@ void ofApp::contactEnd(ofxBox2dContactArgs &e) {
         MidiData * bData = (MidiData*)e.b->GetBody()->GetUserData();
 
         if(aData) {
-            aData->bHit = false;
+//            aData->bHit = false;
             
         }
 
         if(bData) {
-            bData->bHit = false;
+//            bData->bHit = false;
             cout << bData->bHit << endl;
         }
     }
@@ -434,16 +437,16 @@ void ofApp::tombolaRotate(){
 }
 
 //--------------------------------------------------------------
-//void ofApp::tombolaSpin(){
-//    // tRotAngle set by slider
-//
-//    tRects.at(0)->setPosition(tRects.at(0)->getPosition() += (tRadius * cos(glm::radians(tRects.at(0)->getRotation() + tSpin)), tRadius * sin(glm::radians(tRects.at(0)->getRotation() + tSpin)), 0));
-//    tRects.at(1)->setPosition(tRects.at(1)->getPosition() + tRotAngle);
-//    tRects.at(2)->setPosition(tRects.at(2)->getPosition() + tRotAngle);
-//    tRects.at(3)->setPosition(tRects.at(3)->getPosition() + tRotAngle);
-//    tRects.at(4)->setPosition(tRects.at(4)->getPosition() + tRotAngle);
-//    tRects.at(5)->setPosition(tRects.at(5)->getPosition() + tRotAngle);
-//}
+void ofApp::tombolaSpin(){
+    // tRotAngle set by slider
+
+    tRects.at(0)->setPosition(tRects.at(0)->getPosition() += (tRadius * cos(glm::radians(tRects.at(0)->getRotation() + tSpin)), tRadius * sin(glm::radians(tRects.at(0)->getRotation() + tSpin)), 0));
+    tRects.at(1)->setPosition(tRects.at(1)->getPosition() + tRotAngle);
+    tRects.at(2)->setPosition(tRects.at(2)->getPosition() + tRotAngle);
+    tRects.at(3)->setPosition(tRects.at(3)->getPosition() + tRotAngle);
+    tRects.at(4)->setPosition(tRects.at(4)->getPosition() + tRotAngle);
+    tRects.at(5)->setPosition(tRects.at(5)->getPosition() + tRotAngle);
+}
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
