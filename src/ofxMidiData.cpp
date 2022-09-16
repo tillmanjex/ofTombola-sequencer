@@ -11,8 +11,8 @@
 MidiData::MidiData(){
 
     // scales
-    dMaj = { 50, 52, 54, 55, 57, 58, 61};
-    dMin = { 50, 52, 53, 56, 57, 59, 61};
+    dMaj = { 50, 52, 54, 55, 57, 58, 61 };
+    dMin = { 50, 52, 53, 56, 57, 59, 61 };
     // choose a random note for class instance
     dMajSel = dMaj.at(int(ofRandom(0, dMaj.size())));
     dMinSel = dMin.at(int(ofRandom(0, dMaj.size())));

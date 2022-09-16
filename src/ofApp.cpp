@@ -20,11 +20,25 @@ void ofApp::setup(){
     ofxDatGuiButton* ballSpawn = gui->addButton("Spawn Ball");
     gui->onButtonEvent(this, &ofApp::onButtonEvent);
     
+    ofxDatGuiSlider* ballMass = gui->addSlider("Ball Mass", 1.0, 100);
+    gui->onSliderEvent(this, &ofApp::onSliderEvent);
+    
+    ofxDatGuiSlider* ballBounce = gui->addSlider("Bounciness", 0.0, 5.0);
+    gui->onSliderEvent(this, &ofApp::onSliderEvent);
+    
+    ofxDatGuiButton* ballClear = gui->addButton("Clear Balls");
+    gui->onButtonEvent(this, &ofApp::onButtonEvent);
+    
     ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 100, 300);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -10, 10, 0);
+    ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -4, 4, 0);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
+    
+//    ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -10, 10);
+//    gui->onSliderEvent(this, &ofApp::onSliderEvent);
+    
+
     
     gui->addBreak();
     
@@ -45,8 +59,12 @@ void ofApp::setup(){
     box2d.enableEvents();
 //    box2d.enableGrabbing() // maybe implement this later
     
+    tRadius = 200;
     tLength = 200;
     tWidth = 2;
+    
+    bBounce = 0.7;
+    bDensity = 1.0;
     
     // register the contact listeners
     ofAddListener(box2d.contactStartEvents, this, &ofApp::contactStart);
@@ -72,6 +90,11 @@ void ofApp::update(){
     box2d.update();
     midiVoice.update(midi.getName(), 1, 0);
     
+    tombolaScale();
+    tombolaRotate();
+  //  Not working yet
+//    tombolaSpin();
+
     
     for (auto &rect : tRects){
         rect->setPhysics(3.0, 0.5, 1.0);
@@ -97,7 +120,7 @@ void ofApp::draw(){
     
     
     for (auto &rect : tRects){
-        ofSetColor(0, 255, 80);
+        ofSetColor(200, 0, 80);
         ofPushMatrix();
         rect->draw();
         ofPopMatrix();
@@ -115,17 +138,22 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
     if (e.target->is("Spawn Ball")) {
         // make a shared circle
         auto circle = std::make_shared<ofxBox2dCircle>();
-        circle->setPhysics(1, 0.7, 0.7);
+        circle->setPhysics(bDensity, bBounce, 0.7);
+//        circle->addForce(ofVec2f(ofRandom(-1.0, 20.0), ofRandom(-1.0, 20.0)), 50);
         circle->setup(box2d.getWorld(), canvasCenter.x, canvasCenter.y, 5);
         circle->shouldRemoveOffScreen(circle);
         
         // assign an instance of the MidiData class to the ball.
-        
         circle->setData(new MidiData());
         auto * md = (MidiData*)circle->getData();
         md->bHit = false;
         
         circles.push_back(circle);
+    };
+    
+    if (e.target->is("Clear Balls")){
+        circles.clear();
+        
     };
     
     // come back to this. I want to update the current buttons,
@@ -160,13 +188,26 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
 //--------------------------------------------------------------
 void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
     
+    for (auto & circle : circles){
+    if (e.target->is("Bounciness")){
+        bBounce = e.value;
+    } else if (e.target->is("Ball Mass")){
+        bDensity = e.value;
+
+    }
     
     if (e.target->is("Tombola Size")){
-        tombolaScale(e.value, tRects);
+        tRadius = e.value;
+        
     } else if (e.target->is("Tombola Rotate")){
-        tombolaRotate(e.value);
+        tRotAngle = e.value;
+
+    } else if (e.target->is("Tombola Spin")){
+        tSpin = e.value;
+    };
+    
+    
     }
- 
     
 }
 
@@ -189,18 +230,18 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
 
 
             if(aData) {
-//                aData->bHit = true;
+                aData->bHit = true;
                 bData->update(midi.getName(), 1, 0);
                 bData->playNote();
-                cout << "aData" << endl;
+
             };
 
             if(bData) {
-//                bData->bHit = true;
+                bData->bHit = true;
                 bData->update(midi.getName(), 1, 0);
                 bData->playNote();
-                cout << "bData" << endl;
-//            }
+                cout << bData->bHit << endl;
+            
         }
     }
 }
@@ -209,16 +250,18 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
 void ofApp::contactEnd(ofxBox2dContactArgs &e) {
     if(e.a != NULL && e.b != NULL) {
 
-//        SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
-//        SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
-//
-//        if(aData) {
-//            aData->bHit = false;
-//        }
-//
-//        if(bData) {
-//            bData->bHit = false;
-//        }
+        MidiData * aData = (MidiData*)e.a->GetBody()->GetUserData();
+        MidiData * bData = (MidiData*)e.b->GetBody()->GetUserData();
+
+        if(aData) {
+            aData->bHit = false;
+            
+        }
+
+        if(bData) {
+            bData->bHit = false;
+            cout << bData->bHit << endl;
+        }
     }
 }
 
@@ -305,18 +348,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
 
-    // make a shared circle
-    auto circle = std::make_shared<ofxBox2dCircle>();
-    circle->setPhysics(1, 0.7, 0.7);
-    circle->setup(box2d.getWorld(), canvasCenter.x, canvasCenter.y, 5);
-    circle->shouldRemoveOffScreen(circle);
-    
-    // assign an instance of the MidiData class to the ball.
-    circle->setData(new MidiData());
-    auto * md = (MidiData*)circle->getData();
-    md->bHit = false;
-    
-    circles.push_back(circle);
+
 
 }
 
@@ -362,16 +394,16 @@ void ofApp::tombolaCenter(){
 
 }
 //--------------------------------------------------------------
-void ofApp::tombolaScale(float radius, vector<shared_ptr<ofxBox2dRect>> tRectsPassed){
+void ofApp::tombolaScale(){
     
 
-
-    v0.set(radius * cos(glm::radians(0.0)), radius * sin(glm::radians(0.0)), 0);
-    v1.set(radius * cos(glm::radians(60.0)), radius * sin(glm::radians(60.0)), 0);
-    v2.set(radius * cos(glm::radians(120.0)), radius * sin(glm::radians(120.0)), 0);
-    v3.set(radius * cos(glm::radians(180.0)), radius * sin(glm::radians(180.0)), 0);
-    v4.set(radius * cos(glm::radians(240.0)), radius * sin(glm::radians(240.0)), 0);
-    v5.set(radius * cos(glm::radians(300.0)), radius * sin(glm::radians(300.0)), 0);
+    // radius set by slder
+    v0.set(tRadius * cos(glm::radians(0.0)), tRadius * sin(glm::radians(0.0)), 0);
+    v1.set(tRadius * cos(glm::radians(60.0)), tRadius * sin(glm::radians(60.0)), 0);
+    v2.set(tRadius * cos(glm::radians(120.0)), tRadius * sin(glm::radians(120.0)), 0);
+    v3.set(tRadius * cos(glm::radians(180.0)), tRadius * sin(glm::radians(180.0)), 0);
+    v4.set(tRadius * cos(glm::radians(240.0)), tRadius * sin(glm::radians(240.0)), 0);
+    v5.set(tRadius * cos(glm::radians(300.0)), tRadius * sin(glm::radians(300.0)), 0);
     
     v0r.set(canvasCenter.x + v0.x - (v1.x / 2), canvasCenter.y + v0.y - (v1.y / 2));
     v1r.set(canvasCenter.x + v1.x - (v2.x / 2), canvasCenter.y + v1.y - (v2.y / 2));
@@ -390,16 +422,28 @@ void ofApp::tombolaScale(float radius, vector<shared_ptr<ofxBox2dRect>> tRectsPa
 }
 
 //--------------------------------------------------------------
-void ofApp::tombolaRotate(float rotAngle){
+void ofApp::tombolaRotate(){
 
-    
-    tRects.at(0)->setRotation(tRects.at(0)->getRotation() + rotAngle);
-    tRects.at(1)->setRotation(tRects.at(1)->getRotation() + rotAngle);
-    tRects.at(2)->setRotation(tRects.at(2)->getRotation() + rotAngle);
-    tRects.at(3)->setRotation(tRects.at(3)->getRotation() + rotAngle);
-    tRects.at(4)->setRotation(tRects.at(4)->getRotation() + rotAngle);
-    tRects.at(5)->setRotation(tRects.at(5)->getRotation() + rotAngle);
+    // tRotAngle set by slider
+    tRects.at(0)->setRotation(tRects.at(0)->getRotation() + tRotAngle);
+    tRects.at(1)->setRotation(tRects.at(1)->getRotation() + tRotAngle);
+    tRects.at(2)->setRotation(tRects.at(2)->getRotation() + tRotAngle);
+    tRects.at(3)->setRotation(tRects.at(3)->getRotation() + tRotAngle);
+    tRects.at(4)->setRotation(tRects.at(4)->getRotation() + tRotAngle);
+    tRects.at(5)->setRotation(tRects.at(5)->getRotation() + tRotAngle);
 }
+
+//--------------------------------------------------------------
+//void ofApp::tombolaSpin(){
+//    // tRotAngle set by slider
+//
+//    tRects.at(0)->setPosition(tRects.at(0)->getPosition() += (tRadius * cos(glm::radians(tRects.at(0)->getRotation() + tSpin)), tRadius * sin(glm::radians(tRects.at(0)->getRotation() + tSpin)), 0));
+//    tRects.at(1)->setPosition(tRects.at(1)->getPosition() + tRotAngle);
+//    tRects.at(2)->setPosition(tRects.at(2)->getPosition() + tRotAngle);
+//    tRects.at(3)->setPosition(tRects.at(3)->getPosition() + tRotAngle);
+//    tRects.at(4)->setPosition(tRects.at(4)->getPosition() + tRotAngle);
+//    tRects.at(5)->setPosition(tRects.at(5)->getPosition() + tRotAngle);
+//}
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){

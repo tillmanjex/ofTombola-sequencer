@@ -28,13 +28,12 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
         void tombolaInit();
-        void tombolaRotate(float rotAngle);
-        void tombolaScale(float radius, vector<shared_ptr<ofxBox2dRect>> tRectsPassed);
+        void tombolaRotate();
+        void tombolaSpin();
+        void tombolaScale();
         void tombolaCenter();
     
-    
-    float radius{};
-    float value{};
+
     
 
     // ofxMidi
@@ -57,6 +56,7 @@ class ofApp : public ofBaseApp{
     ofxBox2d box2d;
     void contactStart(ofxBox2dContactArgs &e);
     void contactEnd(ofxBox2dContactArgs &e);
+    float gravity;
     
     // Tombola
     ofVec3f v0, v1, v2, v3, v4, v5;
@@ -65,18 +65,12 @@ class ofApp : public ofBaseApp{
     vector <shared_ptr<ofxBox2dEdge>> tEdges;
     vector <shared_ptr<ofxBox2dRect>> tRects;
     int tLength, tWidth;
-    
-    
-    
-    ofPolyline tLine0;
-    ofPolyline tLine1;
-    ofPolyline tLine2;
-    ofPolyline tLine3;
-    ofPolyline tLine4;
-    ofPolyline tLine5;
+    float tRotAngle{};
+    float tRadius{};
+    float tSpin{};
     
     // Ball
     vector <shared_ptr<ofxBox2dCircle>> circles;
-    
+    float bBounce, bDensity;
     
 };
