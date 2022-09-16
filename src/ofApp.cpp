@@ -23,19 +23,19 @@ void ofApp::setup(){
     ofxDatGuiSlider* ballMass = gui->addSlider("Ball Mass", 1.0, 100);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    ofxDatGuiSlider* ballBounce = gui->addSlider("Bounciness", 0.0, 2.0);
+    ofxDatGuiSlider* ballBounce = gui->addSlider("Bounciness", 0.0, 1.0);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
     ofxDatGuiButton* ballClear = gui->addButton("Clear Balls");
     gui->onButtonEvent(this, &ofApp::onButtonEvent);
     
-    ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 150, 300, 100);
+    ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 100, 300, 200);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
     ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -180, 180, 0);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -50, 50);
+    ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -100, 100);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
 
@@ -59,8 +59,8 @@ void ofApp::setup(){
     box2d.enableEvents();
 //    box2d.enableGrabbing() // maybe implement this later
     
-    tRadius = 150;
-    tLength = 150;
+    tRadius = 200;
+    tLength = 200;
     tWidth = 2;
     
     bBounce = 0.7;
@@ -200,9 +200,15 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
         
     } else if (e.target->is("Bounciness")){
         bBounce = e.value;
+        for (auto &circle : circles){
+            circle->setBounce(bBounce);
+        }
         
     } else if (e.target->is("Ball Mass")){
         bDensity = e.value;
+        for (auto &circle : circles){
+            circle->setDensity(bDensity);
+        }
 
     }
     
@@ -396,6 +402,7 @@ void ofApp::tombolaScale(){
     
 
     // radius set by slder
+
     v0.set(tRadius * cos(glm::radians(0.0)), tRadius * sin(glm::radians(0.0)), 0);
     v1.set(tRadius * cos(glm::radians(60.0)), tRadius * sin(glm::radians(60.0)), 0);
     v2.set(tRadius * cos(glm::radians(120.0)), tRadius * sin(glm::radians(120.0)), 0);
