@@ -16,6 +16,10 @@ void ofApp::setup(){
     
     // ofxDatGui
     gui = new ofxDatGui( ofxDatGuiAnchor::TOP_RIGHT);
+    gui->setTheme(new ofxDatGuiThemeSmoke);
+    
+    gui->addHeader();
+    gui->addFooter();
     
     ofxDatGuiButton* ballSpawn = gui->addButton("Spawn Ball");
     gui->onButtonEvent(this, &ofApp::onButtonEvent);
@@ -38,33 +42,28 @@ void ofApp::setup(){
     ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -100, 100);
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
-
-    
     gui->addBreak();
     
-//    ofxDatGuiButton* getPorts = gui->addButton("Get Midi Out Ports");
-//    gui->onButtonEvent(this, &ofApp::onButtonEvent);
+    ofxDatGuiFolder* portsFolder = gui->addFolder("Available MIDI Destinations");
+    portsFolder->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     
     // make as many buttons to open ports as there are ports available.
-    // datGui dropdown box had impossible bugs for me to fix.
-    // This was the only good alternate option.
     for (int i = 0; i < outPorts.size(); i++) {
-        // outPorts.push_back(midiOut.getOutPortList()[i]);
-        gui->addButton(outPorts[i]);
-        gui->onButtonEvent(this, &ofApp::onButtonEvent);
+        portsFolder->addButton(outPorts[i]);
+        portsFolder->onButtonEvent(this, &ofApp::onButtonEvent);
+        
     };
     
     // ofxBox2d fps/gravity x,y)
     box2d.init(60.0, 0, 10);
     box2d.enableEvents();
-//    box2d.enableGrabbing() // maybe implement this later
     
+    // box2d Elements
     tRadius = 200;
     tLength = 200;
     tWidth = 4;
     redInit = 130;
     redTarget = 255;
-   
     
     bBounce = 0.7;
     bDensity = 1.0;
@@ -93,33 +92,25 @@ void ofApp::update(){
     box2d.update();
     midiVoice.update(midi.getName(), 1, 0);
     
-    
     tombolaScale();
     tombolaSpin();
-
-
     
     for (auto &rect : tRects){
         rect->setPhysics(3.0, 0.5, 1.0);
         rect->getWorld();
     }
     
-
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
    
-    gui->draw();
-
     ofSetColor(20);
     for (auto &circle : circles){
         ofFill();
         
         circle->draw();
     };
-    
     
     // Glow effect on hit
     if (tCollision != true) {
@@ -130,16 +121,10 @@ void ofApp::draw(){
         redTarget = redInit;
     };
     
-    
     ofSetColor(redTarget, 80, 70);
     for (auto &rect : tRects){
-        
         rect->draw();
     };
-
-    
-
-    
 
 };
 
@@ -159,25 +144,10 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         md->bHit = false;
         
         circles.push_back(circle);
-    };
-    
-    if (e.target->is("Clear Balls")){
+    } else if (e.target->is("Clear Balls")){
         circles.clear();
         
     };
-    
-    // come back to this. I want to update the current buttons,
-//    if (e.target->is("Get Midi Out Ports")){
-//        for (int i = 0; i < outPorts.size(); i++) {
-//            if (gui->getButton(outPorts[i])->getLabel() == outPorts[i]){
-//                cout << "do nothing" << endl;
-//            } else
-//            if (gui->getButton(outPorts[i])->getLabel() != outPorts[i]){
-//                cout << "should add" << endl;
-//            gui->addButton(outPorts[i]);
-//            gui->onButtonEvent(this, &ofApp::onButtonEvent);
-//        };
-//    };
     
     // check against all port options if they were clicked
     // if so, then close other ports and open the clicked port
@@ -189,9 +159,6 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
             cout << "port" << outPorts[i] << "opened" << endl;
         };
     };
-
-    
-    
 
 }
 
@@ -216,19 +183,14 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
         for (auto &circle : circles){
             circle->setBounce(bBounce);
         }
-        
-    } else if (e.target->is("Ball Mass")){
+    }   else if (e.target->is("Ball Mass")){
         bDensity = e.value;
         for (auto &circle : circles){
             circle->setDensity(bDensity);
         }
-
     }
     
 
-    
-    
-    
     
 }
 
@@ -240,7 +202,6 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
             MidiData * aData = (MidiData*)e.a->GetBody()->GetUserData();
             MidiData * bData = (MidiData*)e.b->GetBody()->GetUserData();
         
-
             if(aData) {
                 aData->bHit = true;
                 bData->update(midi.getName(), 1, 0);
@@ -255,9 +216,6 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
                 tCollision = true;
                 cout << "bHit" << endl;
             }
-            
-        
-        
     }
 }
 
@@ -313,14 +271,12 @@ void ofApp::tombolaInit(){
     auto rect4 = std::make_shared<ofxBox2dRect>();
     auto rect5 = std::make_shared<ofxBox2dRect>();
     
-    
     rect0->setup(box2d.getWorld(), v0r.x, v0r.y, tLength, tWidth, 60);
     rect1->setup(box2d.getWorld(), v1r.x, v1r.y, tLength, tWidth, 120);
     rect2->setup(box2d.getWorld(), v2r.x, v2r.y, tLength, tWidth, 0);
     rect3->setup(box2d.getWorld(), v3r.x, v3r.y, tLength, tWidth, -120);
     rect4->setup(box2d.getWorld(), v4r.x, v4r.y, tLength, tWidth, -60);
     rect5->setup(box2d.getWorld(), v5r.x, v5r.y, tLength, tWidth, 0);
-    
     
     rect0->name = "rect0";
     rect1->name = "rect1";
@@ -329,7 +285,6 @@ void ofApp::tombolaInit(){
     rect4->name = "rect4";
     rect5->name = "rect5";
     
-
     tRects.push_back(rect0);
     tRects.push_back(rect1);
     tRects.push_back(rect2);
@@ -337,15 +292,12 @@ void ofApp::tombolaInit(){
     tRects.push_back(rect4);
     tRects.push_back(rect5);
 
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if (key == 'a') {
         // use it for testing
-        
-
     };
 }
 
@@ -367,8 +319,6 @@ void ofApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
 
-
-
 }
 
 //--------------------------------------------------------------
@@ -389,7 +339,6 @@ void ofApp::mouseExited(int x, int y){
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
     canvasCenter.set(w / 2, h / 2);
-    
     tombolaCenter();
 
 }
@@ -414,10 +363,8 @@ void ofApp::tombolaCenter(){
 }
 //--------------------------------------------------------------
 void ofApp::tombolaScale(){
-    
-
-    // radius set by slder
-
+   
+    // tRadius set by slder
     v0.set(tRadius * cos(glm::radians(0.0)), tRadius * sin(glm::radians(0.0)), 0);
     v1.set(tRadius * cos(glm::radians(60.0)), tRadius * sin(glm::radians(60.0)), 0);
     v2.set(tRadius * cos(glm::radians(120.0)), tRadius * sin(glm::radians(120.0)), 0);
@@ -456,6 +403,7 @@ void ofApp::tombolaRotate(){
 
 //--------------------------------------------------------------
 void ofApp::tombolaSpin(){
+    
     // tSpin set by slider
     v0.rotate(tSpin * ofGetElapsedTimef(), ofVec3f(0, 0, 1));
     v1.rotate(tSpin * ofGetElapsedTimef(), ofVec3f(0, 0, 1));
@@ -470,8 +418,6 @@ void ofApp::tombolaSpin(){
     v3r.set(canvasCenter.x + v3.x - (v4.x / 2), canvasCenter.y + v3.y - (v4.y / 2));
     v4r.set(canvasCenter.x + v4.x - (v5.x / 2), canvasCenter.y + v4.y - (v5.y / 2));
     v5r.set(canvasCenter.x + v5.x - (v0.x / 2), canvasCenter.y + v5.y - (v0.y / 2));
-    
-
     
     tSpinSpeed = tSpin * ofGetElapsedTimef();
     modulo360 = 360;
@@ -489,7 +435,6 @@ void ofApp::tombolaSpin(){
     tRects.at(3)->setPosition(v3r);
     tRects.at(4)->setPosition(v4r);
     tRects.at(5)->setPosition(v5r);
-    
 
 }
 

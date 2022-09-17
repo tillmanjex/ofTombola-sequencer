@@ -34,9 +34,6 @@ public:
     void tombolaScale();
     void tombolaCenter();
 
-    
-    
-
     int tSpinSpeed, modulo360;
 
     // ofxMidi
@@ -50,6 +47,7 @@ public:
     ofxDatGuiButton* ballSpawn;
     ofxDatGuiSlider* slider;
     ofxDatGuiLabel* label;
+    ofxDatGuiFolder* folder;
     vector <ofxDatGuiButton> midiOutPorts;
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onSliderEvent(ofxDatGuiSliderEvent e);

@@ -11,8 +11,8 @@
 MidiData::MidiData(){
 
     // scales
-    dMaj = { 50, 52, 54, 55, 57, 58, 61 };
-    dMin = { 50, 52, 53, 56, 57, 59, 61 };
+    dMaj = { 50, 52, 54, 55, 57, 58, 61, 62, 64, 66, 67, 69, 70, 73 };
+    dMin = { 50, 52, 53, 56, 57, 59, 61, 62, 64, 65, 68, 69, 71, 73 };
     // choose a random note for class instance
     dMajSel = dMaj.at(int(ofRandom(0, dMaj.size())));
     dMinSel = dMin.at(int(ofRandom(0, dMaj.size())));
@@ -33,15 +33,15 @@ MidiData::~MidiData(){
     
 }
 
-void MidiData::update(std::string port, int channel, int scaleSelect){
+void MidiData::update(std::string port, int channel, int scale){
     // update port to globally selected port
     midiOut.openPort(port);
     channel = channel;
     
     // user scale selection
-    if (scaleSelect == 0) {
+    if (scale == 0) {
         note = dMajSel;
-    } else if (scaleSelect == 1){
+    } else if (scale == 1){
         note = dMinSel;
     }
 };
