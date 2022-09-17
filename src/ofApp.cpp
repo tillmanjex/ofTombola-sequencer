@@ -23,6 +23,8 @@ void ofApp::setup(){
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     gui->onMatrixEvent(this, &ofApp::onMatrixEvent);
     
+    ofxDatGuiLabel* ballsHeading = gui->addLabel("BALLS");
+    ballsHeading->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     
     ofxDatGuiButton* ballSpawn = gui->addButton("Spawn Ball");
     ofxDatGuiButton* dMaj = gui->addButton("d Major");
@@ -30,15 +32,20 @@ void ofApp::setup(){
     ofxDatGuiSlider* ballBounce = gui->addSlider("Bounciness", 0.0, 1.0);
     ofxDatGuiButton* ballClear = gui->addButton("Clear Balls");
     
+    gui->addBreak();
+    ofxDatGuiLabel* tombolaHeading = gui->addLabel("TOMBOLA");
+    tombolaHeading->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    
     ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 100, 300, 200);
     ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -180, 180, 0);
     ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -100, 100);
     
     gui->addBreak();
+    ofxDatGuiLabel* midiHeading = gui->addLabel("MIDI");
+    midiHeading->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     
     ofxDatGuiMatrix* midiChannels = gui->addMatrix("Midi Channels", 16, true);
     midiChannels->setRadioMode(true);
-    
     ofxDatGuiFolder* portsFolder = gui->addFolder("Available MIDI Destinations");
     portsFolder->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     
@@ -48,8 +55,6 @@ void ofApp::setup(){
         portsFolder->onButtonEvent(this, &ofApp::onButtonEvent);
         
     };
-    
-
     
     // ofxBox2d fps/gravity x,y)
     box2d.init(60.0, 0, 10);
@@ -144,7 +149,7 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         circles.push_back(circle);
         
     } else if (e.target->is("Clear Balls")){
-        midi.closePort();
+        
         circles.clear();
         
     } else if (e.target->is("d Major")){
