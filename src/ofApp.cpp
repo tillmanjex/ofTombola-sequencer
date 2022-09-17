@@ -6,7 +6,7 @@
 void ofApp::setup(){
     // Utility
     ofSetVerticalSync(true);
-    ofBackground(0, 0, 0);
+    ofBackground(50);
     canvasCenter.set(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2); // (512, 384)
     
     // ofxMidi
@@ -61,9 +61,9 @@ void ofApp::setup(){
     
     tRadius = 200;
     tLength = 200;
-    tWidth = 2;
-    redInit = 100;
-    redTarget = 230;
+    tWidth = 4;
+    redInit = 130;
+    redTarget = 255;
    
     
     bBounce = 0.7;
@@ -112,14 +112,8 @@ void ofApp::update(){
 void ofApp::draw(){
    
     gui->draw();
-    
-    //    if(red < 0 || red > 255)
-    //    {
-    //      i = i * -1;
-    //    }
-    //    red = red + i;
-    //    red = ofLerp(red, 255, 0.2);
-    ofSetColor(0, 100, 100);
+
+    ofSetColor(20);
     for (auto &circle : circles){
         ofFill();
         
@@ -129,7 +123,7 @@ void ofApp::draw(){
     
     // Glow effect on hit
     if (tCollision != true) {
-        redTarget = ofLerp(redTarget, 255, 0.05);
+        redTarget = ofLerp(redTarget, 0, 0.01);
     };
     
     if (tCollision == true){
@@ -137,7 +131,7 @@ void ofApp::draw(){
     };
     
     
-    ofSetColor(redTarget, 0, 80);
+    ofSetColor(redTarget, 80, 70);
     for (auto &rect : tRects){
         
         rect->draw();
@@ -211,11 +205,11 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
         
     } else if (e.target->is("Tombola Rotate")){
         tRotAngle = e.value;
-//        tombolaRotate();
+
         
     } else if (e.target->is("Tombola Spin")){
         tSpin = e.value;
-        // tombolaSpin() doesn't go here because it needs updating relative to framerate/time
+        
         
     } else if (e.target->is("Bounciness")){
         bBounce = e.value;
