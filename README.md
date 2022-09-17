@@ -28,10 +28,10 @@ The Tombola is a hollow hexagon which provides playground for the balls to bounc
 I've been wanting to make this app since at least 2015, so I'm very stoked and hope to be able to keep the bock up to continue developing it.   
 I implemented everything I wanted to from the plan, but it's still missing a few things to make it really usable:   
 
--[] Midi panic button (to kill hanging MIDI notes)
--[] Update midi output ports button (for when a midi destination is added after app start)
--[] Octave range parameter (at the moment it's hard set to 2 octave range) 
--[] Midi keyboard to trigger ball, setting the note value of ball to the key pressed.
+-[] Midi panic button (to kill hanging MIDI notes)   
+-[] Update midi output ports button (for when a midi destination is added after app start)   
+-[] Octave range parameter (at the moment it's hard set to 2 octave range)    
+-[] Midi keyboard to trigger ball, setting the note value of ball to the key pressed.   
 
 ## Libraries Used to Make this App
 - [ofxBox2d](https://github.com/vanderlin/ofxBox2d)
