@@ -8,7 +8,7 @@ Here's a quick and dirty preview video: https://youtu.be/14QYflLPp5k
 The Tombola Sequencer is a MIDI note generator that "sequences" notes based on the simulated physical behavior of bouncing balls and is very much a copy of the Teenage Engineering OP-1 Tombola Sequencer.  
 Each ball represents a MIDI note and upon colliding with any object, the ball sends that MIDI note.
 
-There is no hard limit to the amount of balls the user can generate except for the internal area of the Tombola - if it is left enclosed.  
+There is no hard limit to the amount of balls the user can generate except for the internal area of the Tombola, if it is left enclosed.  
 The Tombola is a hollow hexagon which provides playground for the balls to bounce within. The user has control over the size, spin and rotation (individual line segments) of the Tombola, which allows for a multitude of obstacle arrangements for the balls to deal with. Additionally the amount of bounce and also the mass of the balls are user controllable.
 
 ## Usage
