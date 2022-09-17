@@ -1,7 +1,7 @@
 # Tombola Sequencer
 
 
-file:///Users/tillman/dropbox/screenshots/Screen%20Shot%202022-09-17%20at%2012.40.41.png![image](https://user-images.githubusercontent.com/83029642/190852810-5fb24fb0-eabb-4ead-9136-472b6b2a274a.png)
+![image](https://user-images.githubusercontent.com/83029642/190852810-5fb24fb0-eabb-4ead-9136-472b6b2a274a.png)
 
 Here's a quick and dirty preview video: https://youtu.be/14QYflLPp5k
 
