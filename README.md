@@ -15,10 +15,6 @@ The Tombola is a hollow hexagon which provides playground for the balls to bounc
 
 > Note: The midi destination device needs to be connected, switched on and accessible *before* the Tombola Sequencer app is opened.
 
-```diff
-- The MIDI velocity of the balls is set randomly on every collision and tops out at 100. Despite this, before triggering your first ball, lower your volume first to avoid unwanted sudden loud noises!
-```
-
 1. Activate your MIDI device
 2. Start the Tombola Sequencer App
 3. Click the desired MIDI output port in the GUI menu
