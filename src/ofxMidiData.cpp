@@ -10,7 +10,7 @@
 
 MidiData::MidiData(){
 
-    // scales
+    // scales - todo: user selection of scales
     dMaj = { 50, 52, 54, 55, 57, 58, 61, 62, 64, 66, 67, 69, 70, 73 };
     dMin = { 50, 52, 53, 56, 57, 59, 61, 62, 64, 65, 68, 69, 71, 73 };
     // choose a random note for class instance
@@ -33,10 +33,10 @@ MidiData::~MidiData(){
     
 }
 
-void MidiData::update(std::string port, int channel, int scale){
+void MidiData::update(std::string port, int midiChannel, int scale){
     // update port to globally selected port
     midiOut.openPort(port);
-    channel = channel;
+    channel = midiChannel;
     
     // user scale selection
     if (scale == 0) {
@@ -50,12 +50,10 @@ void MidiData::noteOn(){
     
     velocity = int(ofRandom(30, 100));
     midiOut.sendNoteOn(channel, note, velocity);
-    std::cout << "note on" << endl;
 };
 
 void MidiData::noteOff(){
     midiOut.sendNoteOff(channel, note);
-    std::cout << "note off" << endl;
 }
 
 

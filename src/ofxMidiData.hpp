@@ -21,7 +21,7 @@ public:
      MidiData();
      ~MidiData();
     
-    void update(std::string port, int channel, int scale);
+    void update(std::string port, int midiChannel, int scale);
     void noteOn();
     void noteOff();
     

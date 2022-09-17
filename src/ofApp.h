@@ -36,28 +36,28 @@ public:
 
     int tSpinSpeed, modulo360;
 
-    // ofxMidi
+    // Midi
     ofxMidiOut midi;
-    
     MidiData midiVoice;
-    vector <shared_ptr<MidiData>> midiVoices;
     
     // ofxDatGui
     ofxDatGui* gui;
-    ofxDatGuiButton* ballSpawn;
+    ofxDatGuiButton* button;
     ofxDatGuiSlider* slider;
     ofxDatGuiLabel* label;
     ofxDatGuiFolder* folder;
+    ofxDatGuiMatrix* matrix;
     vector <ofxDatGuiButton> midiOutPorts;
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onSliderEvent(ofxDatGuiSliderEvent e);
+    void onMatrixEvent(ofxDatGuiMatrixEvent e);
     std::vector <string> outPorts;
     
     // ofxBox2d
     ofxBox2d box2d;
     void contactStart(ofxBox2dContactArgs &e);
     void contactEnd(ofxBox2dContactArgs &e);
-    float gravity;
+    
     
     // Tombola
     ofVec3f v0, v1, v2, v3, v4, v5;
@@ -75,5 +75,6 @@ public:
     // Ball
     vector <shared_ptr<ofxBox2dCircle>> circles;
     float bBounce, bDensity;
+    int scale, channel;
     
 };

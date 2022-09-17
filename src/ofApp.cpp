@@ -9,40 +9,35 @@ void ofApp::setup(){
     ofBackground(50);
     canvasCenter.set(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2); // (512, 384)
     
+    
     // ofxMidi
     midi.openPort(0);
     outPorts = midi.getOutPortList();
     
-    
     // ofxDatGui
     gui = new ofxDatGui( ofxDatGuiAnchor::TOP_RIGHT);
     gui->setTheme(new ofxDatGuiThemeSmoke);
-    
     gui->addHeader();
     gui->addFooter();
+    gui->onButtonEvent(this, &ofApp::onButtonEvent);
+    gui->onSliderEvent(this, &ofApp::onSliderEvent);
+    gui->onMatrixEvent(this, &ofApp::onMatrixEvent);
+    
     
     ofxDatGuiButton* ballSpawn = gui->addButton("Spawn Ball");
-    gui->onButtonEvent(this, &ofApp::onButtonEvent);
-    
-    ofxDatGuiSlider* ballMass = gui->addSlider("Ball Mass", 1.0, 100);
-    gui->onSliderEvent(this, &ofApp::onSliderEvent);
-    
+    ofxDatGuiButton* dMaj = gui->addButton("d Major");
+    ofxDatGuiButton* dMin = gui->addButton("d Minor");
     ofxDatGuiSlider* ballBounce = gui->addSlider("Bounciness", 0.0, 1.0);
-    gui->onSliderEvent(this, &ofApp::onSliderEvent);
-    
     ofxDatGuiButton* ballClear = gui->addButton("Clear Balls");
-    gui->onButtonEvent(this, &ofApp::onButtonEvent);
     
     ofxDatGuiSlider* sliderRadius = gui->addSlider("Tombola Size", 100, 300, 200);
-    gui->onSliderEvent(this, &ofApp::onSliderEvent);
-    
     ofxDatGuiSlider* sliderRotate = gui->addSlider("Tombola Rotate", -180, 180, 0);
-    gui->onSliderEvent(this, &ofApp::onSliderEvent);
-    
     ofxDatGuiSlider* sliderSpin = gui->addSlider("Tombola Spin", -100, 100);
-    gui->onSliderEvent(this, &ofApp::onSliderEvent);
     
     gui->addBreak();
+    
+    ofxDatGuiMatrix* midiChannels = gui->addMatrix("Midi Channels", 16, true);
+    midiChannels->setRadioMode(true);
     
     ofxDatGuiFolder* portsFolder = gui->addFolder("Available MIDI Destinations");
     portsFolder->setLabelAlignment(ofxDatGuiAlignment::CENTER);
@@ -54,19 +49,25 @@ void ofApp::setup(){
         
     };
     
+
+    
     // ofxBox2d fps/gravity x,y)
     box2d.init(60.0, 0, 10);
     box2d.enableEvents();
     
-    // box2d Elements
+    // BOX2D ELEMENTS
+    // Tombola
     tRadius = 200;
     tLength = 200;
     tWidth = 4;
     redInit = 130;
     redTarget = 255;
     
+    // ball
     bBounce = 0.7;
     bDensity = 1.0;
+    scale = 0;
+    channel = 1;
     
     // register the contact listeners
     ofAddListener(box2d.contactStartEvents, this, &ofApp::contactStart);
@@ -74,9 +75,6 @@ void ofApp::setup(){
     
     // Custom Functions
     tombolaInit();
-    
-    
-    
     
 }
 //--------------------------------------------------------------
@@ -90,15 +88,15 @@ void ofApp::exit() {
 void ofApp::update(){
     
     box2d.update();
-    midiVoice.update(midi.getName(), 1, 0);
-    
     tombolaScale();
     tombolaSpin();
+    midiVoice.update(midi.getName(), channel, scale);
     
     for (auto &rect : tRects){
         rect->setPhysics(3.0, 0.5, 1.0);
         rect->getWorld();
     }
+
     
 }
 
@@ -108,7 +106,6 @@ void ofApp::draw(){
     ofSetColor(20);
     for (auto &circle : circles){
         ofFill();
-        
         circle->draw();
     };
     
@@ -132,20 +129,29 @@ void ofApp::draw(){
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
     
     if (e.target->is("Spawn Ball")) {
-        // make a shared circle
+        // make a circle with shared resources
         auto circle = std::make_shared<ofxBox2dCircle>();
         circle->setPhysics(bDensity, bBounce, 0.7);
         circle->setup(box2d.getWorld(), canvasCenter.x, canvasCenter.y, 7);
         circle->shouldRemoveOffScreen(circle);
         
         // assign an instance of the MidiData class to the ball.
+        // the circle can then be a carrier of class data! cool
         circle->setData(new MidiData());
         auto * md = (MidiData*)circle->getData();
         md->bHit = false;
         
         circles.push_back(circle);
+        
     } else if (e.target->is("Clear Balls")){
+        midi.closePort();
         circles.clear();
+        
+    } else if (e.target->is("d Major")){
+        scale = 0;
+        
+    } else if (e.target->is("d Minor")){
+        scale = 1;
         
     };
     
@@ -165,28 +171,20 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
 //--------------------------------------------------------------
 void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
    
-    
+    // selecting based on slider title - passing the value straight to variables
     if (e.target->is("Tombola Size")){
         tRadius = e.value;
         
-        
     } else if (e.target->is("Tombola Rotate")){
         tRotAngle = e.value;
-
         
     } else if (e.target->is("Tombola Spin")){
         tSpin = e.value;
-        
         
     } else if (e.target->is("Bounciness")){
         bBounce = e.value;
         for (auto &circle : circles){
             circle->setBounce(bBounce);
-        }
-    }   else if (e.target->is("Ball Mass")){
-        bDensity = e.value;
-        for (auto &circle : circles){
-            circle->setDensity(bDensity);
         }
     }
     
@@ -195,26 +193,30 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
 }
 
 //--------------------------------------------------------------
+void ofApp::onMatrixEvent(ofxDatGuiMatrixEvent e){
+    
+    channel = e.child + 1;
+}
+
+//--------------------------------------------------------------
 void ofApp::contactStart(ofxBox2dContactArgs &e) {
     if(e.a != NULL && e.b != NULL) {
         
-            // Get the set user data from collided objects
+            // Get the set data from collided objects
             MidiData * aData = (MidiData*)e.a->GetBody()->GetUserData();
             MidiData * bData = (MidiData*)e.b->GetBody()->GetUserData();
         
             if(aData) {
                 aData->bHit = true;
-                bData->update(midi.getName(), 1, 0);
+                bData->update(midi.getName(), channel, scale);
                 bData->noteOn();
-                cout << "aData" << endl;
             };
 
             if(bData) {
                 bData->bHit = true;
-                bData->update(midi.getName(), 1, 0);
+                bData->update(midi.getName(), channel, scale);
                 bData->noteOn();
                 tCollision = true;
-                cout << "bHit" << endl;
             }
     }
 }
@@ -222,21 +224,20 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
 //--------------------------------------------------------------
 void ofApp::contactEnd(ofxBox2dContactArgs &e) {
     if(e.a != NULL && e.b != NULL) {
-
+        
+        // Get the set data from collided objects
         MidiData * aData = (MidiData*)e.a->GetBody()->GetUserData();
         MidiData * bData = (MidiData*)e.b->GetBody()->GetUserData();
 
         if(aData) {
             aData->bHit = false;
             aData->noteOff();
-            cout << "aHit Off" << endl;
         }
 
         if(bData) {
             bData->bHit = false;
             bData->noteOff();
             tCollision = false;
-            cout << "bHit Off" << endl;
         }
     }
 }
@@ -277,13 +278,6 @@ void ofApp::tombolaInit(){
     rect3->setup(box2d.getWorld(), v3r.x, v3r.y, tLength, tWidth, -120);
     rect4->setup(box2d.getWorld(), v4r.x, v4r.y, tLength, tWidth, -60);
     rect5->setup(box2d.getWorld(), v5r.x, v5r.y, tLength, tWidth, 0);
-    
-    rect0->name = "rect0";
-    rect1->name = "rect1";
-    rect2->name = "rect2";
-    rect3->name = "rect3";
-    rect4->name = "rect4";
-    rect5->name = "rect5";
     
     tRects.push_back(rect0);
     tRects.push_back(rect1);
