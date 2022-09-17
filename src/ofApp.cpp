@@ -62,6 +62,9 @@ void ofApp::setup(){
     tRadius = 200;
     tLength = 200;
     tWidth = 2;
+    redInit = 100;
+    redTarget = 230;
+   
     
     bBounce = 0.7;
     bDensity = 1.0;
@@ -109,18 +112,34 @@ void ofApp::update(){
 void ofApp::draw(){
    
     gui->draw();
-
     
+    //    if(red < 0 || red > 255)
+    //    {
+    //      i = i * -1;
+    //    }
+    //    red = red + i;
+    //    red = ofLerp(red, 255, 0.2);
+    ofSetColor(0, 100, 100);
     for (auto &circle : circles){
         ofFill();
-        ofSetColor(255);
+        
         circle->draw();
     };
     
     
+    // Glow effect on hit
+    if (tCollision != true) {
+        redTarget = ofLerp(redTarget, 255, 0.05);
+    };
     
+    if (tCollision == true){
+        redTarget = redInit;
+    };
+    
+    
+    ofSetColor(redTarget, 0, 80);
     for (auto &rect : tRects){
-        ofSetColor(200, 0, 80);
+        
         rect->draw();
     };
 
@@ -137,7 +156,7 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         // make a shared circle
         auto circle = std::make_shared<ofxBox2dCircle>();
         circle->setPhysics(bDensity, bBounce, 0.7);
-        circle->setup(box2d.getWorld(), canvasCenter.x, canvasCenter.y, 5);
+        circle->setup(box2d.getWorld(), canvasCenter.x, canvasCenter.y, 7);
         circle->shouldRemoveOffScreen(circle);
         
         // assign an instance of the MidiData class to the ball.
@@ -223,32 +242,24 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
 void ofApp::contactStart(ofxBox2dContactArgs &e) {
     if(e.a != NULL && e.b != NULL) {
         
-        // Check what objects are colliding (it seems like a nonsensical
-        // check, but without it I was getting pointer access errors...
-//        if(e.a->GetType() == b2Shape::e_circle || e.a->GetType() == b2Shape::e_edge) {
-            
-            cout << "contact start" << endl;
-            
-            // Dont fully understand what's happening here,
-            // but it seems like aData is being set as a pointer to MidiData
-            // and - as it now takes the class form - can subsequently use
-            // methods from that class as well as the contact listner class
+            // Get the set user data from collided objects
             MidiData * aData = (MidiData*)e.a->GetBody()->GetUserData();
             MidiData * bData = (MidiData*)e.b->GetBody()->GetUserData();
-
+        
 
             if(aData) {
                 aData->bHit = true;
                 bData->update(midi.getName(), 1, 0);
                 bData->noteOn();
-                cout << "aData collision" << endl;
+                cout << "aData" << endl;
             };
 
             if(bData) {
                 bData->bHit = true;
                 bData->update(midi.getName(), 1, 0);
                 bData->noteOn();
-                cout << "bData collision" << endl;
+                tCollision = true;
+                cout << "bHit" << endl;
             }
             
         
@@ -266,11 +277,14 @@ void ofApp::contactEnd(ofxBox2dContactArgs &e) {
         if(aData) {
             aData->bHit = false;
             aData->noteOff();
+            cout << "aHit Off" << endl;
         }
 
         if(bData) {
             bData->bHit = false;
             bData->noteOff();
+            tCollision = false;
+            cout << "bHit Off" << endl;
         }
     }
 }
@@ -313,6 +327,14 @@ void ofApp::tombolaInit(){
     rect4->setup(box2d.getWorld(), v4r.x, v4r.y, tLength, tWidth, -60);
     rect5->setup(box2d.getWorld(), v5r.x, v5r.y, tLength, tWidth, 0);
     
+    
+    rect0->name = "rect0";
+    rect1->name = "rect1";
+    rect2->name = "rect2";
+    rect3->name = "rect3";
+    rect4->name = "rect4";
+    rect5->name = "rect5";
+    
 
     tRects.push_back(rect0);
     tRects.push_back(rect1);
@@ -323,7 +345,6 @@ void ofApp::tombolaInit(){
 
     
 }
-
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){

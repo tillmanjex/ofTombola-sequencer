@@ -7,31 +7,34 @@
 #include "ofxMidiData.hpp"
 
 
+
 class ofApp : public ofBaseApp{
 
-	public:
-		void setup();
-		void update();
-		void draw();
-        void exit();
+public:
+    void setup();
+    void update();
+    void draw();
+    void exit();
 
-		void keyPressed(int key);
-		void keyReleased(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void mouseEntered(int x, int y);
-		void mouseExited(int x, int y);
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
+    void keyPressed(int key);
+    void keyReleased(int key);
+    void mouseMoved(int x, int y );
+    void mouseDragged(int x, int y, int button);
+    void mousePressed(int x, int y, int button);
+    void mouseReleased(int x, int y, int button);
+    void mouseEntered(int x, int y);
+    void mouseExited(int x, int y);
+    void windowResized(int w, int h);
+    void dragEvent(ofDragInfo dragInfo);
+    void gotMessage(ofMessage msg);
+
+    void tombolaInit();
+    void tombolaRotate();
+    void tombolaSpin();
+    void tombolaScale();
+    void tombolaCenter();
+
     
-        void tombolaInit();
-        void tombolaRotate();
-        void tombolaSpin();
-        void tombolaScale();
-        void tombolaCenter();
     
 
     int tSpinSpeed, modulo360;
@@ -67,6 +70,9 @@ class ofApp : public ofBaseApp{
     float tRotAngle{};
     float tRadius{};
     float tSpin{};
+    bool tCollision;
+    float redTarget;
+    int redInit; // used in draw()
     
     // Ball
     vector <shared_ptr<ofxBox2dCircle>> circles;
